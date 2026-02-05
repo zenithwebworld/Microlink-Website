@@ -227,3 +227,32 @@ $(document).ready(function(){
         }
     });
 });
+
+$(document).ready(function(){
+    $(".testimonial-carousel").owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        navText: [
+            '<i class="n-icon" data-icon="s-arrow-left" data-iconwidth="24px" data-iconheight="24px"></i>',
+            '<i class="n-icon" data-icon="s-arrow-right" data-iconwidth="24px" data-iconheight="24px"></i>'
+        ],
+        dots: false,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 1
+            },
+            1000: {
+                items: 1
+            }
+        },
+        onInitialized: function() {
+            svgIcon(); // Recalling svgIcon function after Owl Carousel initialization
+        }
+    });
+});
