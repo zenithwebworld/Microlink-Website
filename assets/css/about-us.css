@@ -1,7 +1,6 @@
 .core-values {
     background-color: #0f1c34;
     color: #fff;
-    padding: 100px 0;
 }
 
 .core-values p {
@@ -45,7 +44,6 @@
 
 .vision-mission-section {
     background: #f1f5f9;
-    padding: 100px 0;
 }
 
 .vm-card {
@@ -62,7 +60,7 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-.icon-circle {
+.vision-mission-section .icon-circle {
     width: 70px;
     height: 70px;
     background: rgba(220, 53, 69, 0.1);
@@ -73,7 +71,7 @@
     margin: 0 auto;
 }
 
-.icon-circle span {
+.vision-mission-section .icon-circle span {
     font-size: 32px;
     color: #dc3545;
 }
@@ -136,5 +134,8 @@
 @media (max-width: 575px) {
     .portfolio-card  .thumbnail-container {
       padding-bottom: 110%;
+    }
+    .vm-card {
+      padding: 25px;
     }
 }
