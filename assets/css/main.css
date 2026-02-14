@@ -1298,7 +1298,7 @@ body img { max-width: 100%; }
   .header-section { position: relative; }
 
   .header-section .menu {
-    position: absolute;
+    position: fixed;
     z-index: 999;
     overflow-x: scroll;
     margin: 20px;
@@ -2409,7 +2409,8 @@ body img { max-width: 100%; }
 }
 
 .innerbanner-section .thumbnail-container {
-    padding-bottom: 27%;
+    padding-bottom: 0;
+    height: 100%;
 }
 .innerbanner-section .thumbnail-container::after {
     content: "";
@@ -2481,12 +2482,8 @@ body img { max-width: 100%; }
 }
 
 @media (max-width: 768px) {
-    .innerbanner-section {
-        margin-top: 60px;
-    }
-
     .innerbanner-section .video-thumb {
-        height: 280px;
+        height: 380px;
     }
 
     .innerbanner-section .cm-title {
@@ -3097,16 +3094,16 @@ body img { max-width: 100%; }
     margin-bottom: 0;
 }
 
-.testimonial-section .img{
+.common-owl .img{
     width: 135px;
 }
-.testimonial-section .owl-nav{
+.common-owl .owl-nav{
   gap: 10px;
   display: flex;
   justify-content: center;
   margin-top: 50px;
 }
-.testimonial-section .owl-nav .owl-prev , .testimonial-section .owl-nav .owl-next {
+.common-owl .owl-nav .owl-prev , .common-owl .owl-nav .owl-next {
   border: 1px solid var(--primary) !important;
   height: 50px;
   width: 50px;
@@ -3262,11 +3259,30 @@ body img { max-width: 100%; }
     width: 400px;
     height: 400px;
   }
-}
-
-@media(max-width: 992px){
   .testimonial-text {
       font-size: 18px;
       line-height: 130%;
+  }
+}
+
+@media(max-width: 767px){
+  
+  .circle-animation.business-2 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .circle-animation.business-3 {
+    width: 220px;
+    height: 220px;
+  }
+
+  .circle-animation.business-4 {
+    width: 400px;
+    height: 400px;
+  }
+  .common-owl .owl-nav .owl-prev , .common-owl .owl-nav .owl-next {
+    height: 40px;
+    width: 40px;
   }
 }
