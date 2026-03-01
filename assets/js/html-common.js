@@ -277,3 +277,33 @@ $(document).ready(function(){
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll("#partnerTab .nav-link");
+    const tabContents = document.querySelectorAll(".tab-pane");
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", function () {
+            // Remove active class from all tabs and tab contents
+            tabs.forEach((t) => t.classList.remove("active"));
+            tabContents.forEach((content) => content.classList.remove("show", "active"));
+
+            // Add active class to the clicked tab
+            this.classList.add("active");
+
+            if (this.getAttribute("data-bs-target") === "#all") {
+                // If "All Partners" tab is clicked, show all tab panes
+                tabContents.forEach((content) => content.classList.add("show", "active"));
+            } else {
+                // Otherwise, show only the corresponding tab pane
+                const target = document.querySelector(this.getAttribute("data-bs-target"));
+                target.classList.add("show", "active");
+            }
+        });
+    });
+});
+
+// Initialize Fancybox
+Fancybox.bind("[data-fancybox]", {
+  // Options can be added here if needed
+});

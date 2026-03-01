@@ -3446,3 +3446,157 @@ body img { max-width: 100%; }
   background: var(--primary);
   color: #fff;
 }
+
+.partner-card{
+    background:#fff;
+    border-radius:16px;
+    padding:30px;
+    text-align:center;
+    transition:0.3s;
+    border:1px solid #eee;
+}
+.partner-card .thumbnail-container{
+  padding-bottom: 25%;
+}
+.partner-card:hover{
+    transform:translateY(-5px);
+}
+.partner-card img{
+    max-height:60px;
+    margin-bottom:20px;
+    filter: grayscale(100%);
+    transition:0.3s;
+}
+.partner-card:hover img{
+    filter: grayscale(0%);
+}
+.nav-pills .nav-link{
+    font-weight:600;
+    padding:10px 15px;
+    border-radius:6px;
+    color:  var(--primary);
+}
+.nav-pills .nav-link.active{
+    background:#e43b2f;
+}
+.category-title{
+    font-weight:700;
+    margin-bottom:30px;
+}
+.cm-nav .nav{
+    background: #f9fafb;
+    padding: 6px;
+    border-radius: 10px;
+}
+
+/* Feature Card */
+.feature-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid #f1f1f1;
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+  transform:translateY(-5px);
+}
+
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ffeaea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: var(--primary);
+    font-size: 28px;
+    transition: 0.3s;
+}
+
+.feature-card:hover .icon-circle {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Job Card */
+.job-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #f1f1f1;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.job-card:hover {
+    transform:translateY(-5px);
+}
+
+.job-body {
+    padding: 25px;
+    flex: 1;
+}
+
+.job-footer {
+    padding: 20px 25px;
+    border-top: 1px solid #f3f3f3;
+}
+
+.category-tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary-color);
+}
+
+.type-tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #999;
+}
+
+.apply-link {
+    color: var(--primary-color);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.apply-link:hover {
+    text-decoration: underline;
+}
+
+.outline-btn {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 700;
+    background: transparent;
+    transition: 0.3s;
+}
+
+.outline-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.media-item .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(220, 53, 69, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 28px;
+}
