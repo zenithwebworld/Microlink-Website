@@ -1871,7 +1871,7 @@ body img { max-width: 100%; }
 .counter{
   position: relative;
   overflow: visible;
-  background: linear-gradient(90deg,#0f1c34 0%,#103b8c 45.5%,#0f1c34 100%);
+  background: linear-gradient(90deg, #0f1c34 0%, #0b285e 45.5%, #0f1c34 100%);
 }
 .counter::after{
   content: "";
@@ -3485,7 +3485,7 @@ body img { max-width: 100%; }
     margin-bottom:30px;
 }
 .cm-nav .nav{
-    background: #f9fafb;
+    background: #f3f3f3;
     padding: 6px;
     border-radius: 10px;
 }
@@ -3523,11 +3523,6 @@ body img { max-width: 100%; }
 }
 
 /* Section */
-.openings-section{
-    padding:100px 0;
-    background:#f8f9fa;
-}
-
 /* Header badge */
 .active-badge{
     background:#fff;
@@ -3557,7 +3552,6 @@ body img { max-width: 100%; }
 .job-card{
     background:#fff;
     border-radius:14px;
-    border:1px solid #eee;
     box-shadow:0 5px 20px rgba(0,0,0,0.05);
     transition:.3s ease;
 }

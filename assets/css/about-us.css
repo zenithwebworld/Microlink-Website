@@ -1,5 +1,5 @@
 .core-values {
-    background: #103b8c;
+    background: #0f1c34;
     color: #fff;
 }
 
@@ -8,7 +8,7 @@
 }
 
 .value-card {
-    background: rgb(15 23 42 / 22%);
+    background: white;
     border: 1px solid rgba(148, 163, 184, 0.2);
     border-radius: 20px;
     padding: 35px 25px;
