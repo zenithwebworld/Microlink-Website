@@ -16,7 +16,8 @@
   --secondary: #101a29;
   --black: #000000;
   --white: #FFFFFF;
-  --text-color: #6c757d;
+  --text-color: #000000;
+  /* --text-color: #6c757d; */
   /* black as RGB for rgba() uses */
   --black-rgb: 0, 0, 0;
 
@@ -1994,7 +1995,8 @@ body img {
 .header-section:has(+.inner-banner-01),
 .header-section:has(~ .error-404-section),
 .header-section:has(~ .thank-you-section) {
-  position: unset;
+  position: relative;
+  z-index: 9;
 }
 
 .header-section .part-auto {
@@ -5081,7 +5083,15 @@ body img {
   margin-right: 5px;
   backdrop-filter: blur(12px);
 }
+.blog-details .two-part{
+  column-count: 2;
+}
 
+@media (max-width: 992px) {
+  .blog-details .two-part{
+    column-count: 1;
+  }
+}
 @media (max-width: 575px) {
     .portfolio-card  .thumbnail-container {
       padding-bottom: 110%;
@@ -5089,4 +5099,4 @@ body img {
     .vm-card {
       padding: 25px;
     }
-}
+} 
