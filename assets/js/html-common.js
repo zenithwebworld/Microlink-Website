@@ -20,6 +20,7 @@
     $( document ).ready(function() {
         $(".menu ul li").find("ul").before('<span class="is-open"><img class="lazy" src="assets/images/plus.svg" alt="Menu Close" title="Menu Close" width="20" height="20"></span>');
         $(".menu ul li").find("ul").parent("li").addClass("is-open-a");
+        $(".menu ul li").find(".mega-menu-wrap").parent("li").addClass("is-open-a");
         $(".menu .is-open").click(function(event) {
             event.preventDefault();
             $(this).toggleClass("is-close");
