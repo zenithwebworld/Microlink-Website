@@ -15,7 +15,7 @@ $office_hours = get_theme_mod('footer_office_hours', 'Monday to Friday: 9:00 am 
 
 <!-- Banner Section -->
 <section class="inner-banner-01 position-relative bg-light">
-    <div class="container py-lg-5 py-4">
+    <div class="container py-4">
         <div class="row align-items-center">
             <div class="col-lg-7 col-md-6">
                 <h1 class="display-5 fw-bold text-black mb-0">

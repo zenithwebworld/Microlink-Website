@@ -3553,6 +3553,13 @@ body img {
   z-index: 1;
   position: relative;
   overflow: hidden;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.inner-banner-01 + .section-gap {
+  padding-top: 45px;
 }
 
 .inner-banner-01 .container {
