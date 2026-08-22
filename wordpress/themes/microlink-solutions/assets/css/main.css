@@ -5156,3 +5156,24 @@ body img {
   height: auto !important;
   object-fit: contain !important;
 }
+
+/* Fix Inner Banner & Blog Section Overlapping Image Issue */
+.innerbanner-section .thumbnail-container::after {
+  background-image: linear-gradient(90deg, rgba(8, 17, 31, 0.55) 0%, rgba(8, 17, 31, 0.1) 70%, transparent 100%) !important;
+}
+
+.innerbanner-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.innerbanner-section .video-thumb {
+  position: relative;
+  overflow: hidden;
+}
+
+.blog-section {
+  position: relative;
+  z-index: 2;
+  background-color: #ffffff;
+}
