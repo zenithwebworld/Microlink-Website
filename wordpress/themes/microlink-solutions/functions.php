@@ -309,3 +309,76 @@ class Footer_Menu_Walker extends Walker_Nav_Menu {
         $output .= '</li>';
     }
 }
+
+// Register Footer Customizer Settings
+function microlink_solutions_customize_register($wp_customize) {
+    $wp_customize->add_section('footer_settings_section', array(
+        'title'    => __('Footer Settings', _THEME_DOMAIN),
+        'priority' => 130,
+    ));
+
+    // Footer Contact Email
+    $wp_customize->add_setting('footer_email', array(
+        'default'           => 'info@microlink.co.in',
+        'sanitize_callback' => 'sanitize_email',
+    ));
+    $wp_customize->add_control('footer_email', array(
+        'label'   => __('Footer Email', _THEME_DOMAIN),
+        'section' => 'footer_settings_section',
+        'type'    => 'email',
+    ));
+
+    // Footer Contact Phone
+    $wp_customize->add_setting('footer_phone', array(
+        'default'           => '+91 98244 08739',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('footer_phone', array(
+        'label'   => __('Footer Phone', _THEME_DOMAIN),
+        'section' => 'footer_settings_section',
+        'type'    => 'text',
+    ));
+
+    // Footer Address
+    $wp_customize->add_setting('footer_address', array(
+        'default'           => '4th Floor, Sarthik Complex, Near Iscon Circle, Satellite, Ahmedabad, Gujarat 380015',
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+    $wp_customize->add_control('footer_address', array(
+        'label'   => __('Footer Address', _THEME_DOMAIN),
+        'section' => 'footer_settings_section',
+        'type'    => 'textarea',
+    ));
+
+    // Social Links
+    $wp_customize->add_setting('footer_facebook', array(
+        'default'           => '#',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('footer_facebook', array(
+        'label'   => __('Facebook URL', _THEME_DOMAIN),
+        'section' => 'footer_settings_section',
+        'type'    => 'url',
+    ));
+
+    $wp_customize->add_setting('footer_twitter', array(
+        'default'           => '#',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('footer_twitter', array(
+        'label'   => __('Twitter URL', _THEME_DOMAIN),
+        'section' => 'footer_settings_section',
+        'type'    => 'url',
+    ));
+
+    $wp_customize->add_setting('footer_linkedin', array(
+        'default'           => '#',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('footer_linkedin', array(
+        'label'   => __('LinkedIn URL', _THEME_DOMAIN),
+        'section' => 'footer_settings_section',
+        'type'    => 'url',
+    ));
+}
+add_action('customize_register', 'microlink_solutions_customize_register');

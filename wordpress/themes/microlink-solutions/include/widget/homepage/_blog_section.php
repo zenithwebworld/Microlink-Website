@@ -1,5 +1,5 @@
 <?php
-// Hero Section Widget
+// Home Blog Section Widget
 class Home_Blog_Section_Widget extends WP_Widget {
 
     function __construct() {
@@ -13,31 +13,36 @@ class Home_Blog_Section_Widget extends WP_Widget {
     // Frontend Output
     public function widget($args, $instance) {
         echo $args['before_widget'];
+
+        $title    = !empty($instance['title']) ? $instance['title'] : 'Stay connected with the technology <span>with our latest blogs</span>';
+        $desc     = !empty($instance['desc']) ? $instance['desc'] : 'Explore our latest blogs on technology, digital transformation that connect with you the right knowledge';
+        $btn_text = !empty($instance['btn_text']) ? $instance['btn_text'] : 'View All Blogs';
         ?>
 
         <section class="blog-section section-gap double-gap">
             <div class="container">
                 <div class="row align-items-center mb-sm-5 mb-4 justify-content-between">
                     <div class="col-md-8 col-xl-5">
-                        <h2 class="cm-title text-black fs-40 mb-2">
-                            Stay connected with the technology <span>with our latest blogs</span>
-                        </h2>
-                        <p class="text-muted">Explore our latest blogs on technology, digital transformation that connect with you the right knowledge</p>
+                        <h2 class="cm-title text-black fs-40 mb-2"><?php echo wp_kses_post($title); ?></h2>
+                        <p class="text-muted"><?php echo esc_html($desc); ?></p>
                     </div>
                     <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                        <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts'))); ?>" class="btn btn-primary">View All Blogs</a>
+                        <?php if (!empty($btn_text)) : ?>
+                            <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts')) ?: home_url('/blogs')); ?>" class="btn btn-primary">
+                                <?php echo esc_html($btn_text); ?>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="row g-4">
                     <?php
                     $query = new WP_Query([
-                        'post_type' => 'post',
+                        'post_type'      => 'post',
                         'posts_per_page' => 4
                     ]);
 
                     if ($query->have_posts()) :
                         $count = 0;
-                        $side_open = false;
 
                         while ($query->have_posts()) : $query->the_post();
                             $count++;
@@ -45,13 +50,13 @@ class Home_Blog_Section_Widget extends WP_Widget {
                             $img = get_the_post_thumbnail_url(get_the_ID(), 'full');
                             $img = $img ?: get_template_directory_uri().'/assets/images/blog-default.png';
 
-                            $title = get_the_title();
-                            $desc = wp_trim_words(get_the_excerpt(), 18);
-                            $link = get_permalink();
-                            $date = get_the_date('M d, Y');
-                            $author = get_the_author();
-                            $cat = get_the_category();
-                            $cat_name = !empty($cat) ? $cat[0]->name : '';
+                            $post_title = get_the_title();
+                            $post_desc  = wp_trim_words(get_the_excerpt(), 18);
+                            $link       = get_permalink();
+                            $date       = get_the_date('M d, Y');
+                            $author     = get_the_author();
+                            $cat        = get_the_category();
+                            $cat_name   = !empty($cat) ? $cat[0]->name : '';
                     ?>
 
                     <?php if ($count == 1) : ?>
@@ -70,8 +75,8 @@ class Home_Blog_Section_Widget extends WP_Widget {
                                         <span class="text-muted">| <?php echo esc_html($date); ?></span>
                                     </div>
                                     <div class="fw-bold mt-3"><?php echo esc_html($author); ?></div>
-                                    <h2 class="h2 mb-3"><?php echo esc_html($title); ?></h2>
-                                    <p class="text-muted"><?php echo esc_html($desc); ?></p>
+                                    <h2 class="h2 mb-3"><?php echo esc_html($post_title); ?></h2>
+                                    <p class="text-muted"><?php echo esc_html($post_desc); ?></p>
                                     <a href="<?php echo esc_url($link); ?>" class="btn btn-link button-up mt-4">Read More</a>
                                 </div>
                             </div>
@@ -97,8 +102,8 @@ class Home_Blog_Section_Widget extends WP_Widget {
                                         <?php echo esc_html($cat_name); ?>
                                         <span class="text-muted">| <?php echo esc_html($date); ?></span>
                                     </div>
-                                    <h4 class="mb-3"><?php echo esc_html($title); ?></h4>
-                                    <p class="text-muted"><?php echo esc_html($desc); ?></p>
+                                    <h4 class="mb-3"><?php echo esc_html($post_title); ?></h4>
+                                    <p class="text-muted"><?php echo esc_html($post_desc); ?></p>
                                     <a href="<?php echo esc_url($link); ?>" class="btn btn-link button-up mt-3">Read More</a>
                                 </div>
                             </div>
@@ -109,6 +114,8 @@ class Home_Blog_Section_Widget extends WP_Widget {
                     <?php
                         endwhile;
                         wp_reset_postdata();
+                    else :
+                        echo '<div class="col-12 text-center text-muted"><p>No blog posts published yet.</p></div>';
                     endif;
                     ?>
 
@@ -122,14 +129,29 @@ class Home_Blog_Section_Widget extends WP_Widget {
         <?php echo $args['after_widget'];
     }
 
-    // Backend Form (UNCHANGED)
-    public function form($instance) { ?>
-        <p><strong>Blogs are automatically fetched from CPT (posts)</strong></p>
+    // Backend Form
+    public function form($instance) {
+        $title    = $instance['title'] ?? '';
+        $desc     = $instance['desc'] ?? '';
+        $btn_text = $instance['btn_text'] ?? '';
+        ?>
+
+        <p><label>Section Title (HTML allowed e.g. &lt;span&gt;)</label>
+        <input class="widefat" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo esc_attr($title); ?>"></p>
+
+        <p><label>Section Subtitle</label>
+        <textarea class="widefat" rows="2" name="<?php echo $this->get_field_name('desc'); ?>"><?php echo esc_textarea($desc); ?></textarea></p>
+
+        <p><label>Button Text</label>
+        <input class="widefat" name="<?php echo $this->get_field_name('btn_text'); ?>" value="<?php echo esc_attr($btn_text); ?>"></p>
     <?php }
 
-    // Save Data (UNCHANGED)
+    // Save Data
     public function update($new_instance, $old_instance) {
         $instance = [];
+        $instance['title']    = !empty($new_instance['title']) ? wp_kses_post($new_instance['title']) : '';
+        $instance['desc']     = !empty($new_instance['desc']) ? sanitize_textarea_field($new_instance['desc']) : '';
+        $instance['btn_text'] = !empty($new_instance['btn_text']) ? sanitize_text_field($new_instance['btn_text']) : '';
         return $instance;
     }
 }

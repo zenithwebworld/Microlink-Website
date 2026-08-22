@@ -3185,7 +3185,10 @@ body img {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+}
+
+.services-owl .service-card > div:last-child {
+  margin-top: auto;
 }
 
 /* If using bootstrap utility class .h-100, keep it as fallback */
@@ -5139,4 +5142,17 @@ body img {
     .vm-card {
       padding: 25px;
     }
-} 
+}
+
+/* Footer Logo Sizing Fix */
+.footer-logo-wrap img,
+.footer-section .custom-logo,
+.footer-section .footer-logo-img,
+.footer-card .custom-logo,
+.footer-card img {
+  max-height: 55px !important;
+  max-width: 200px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+}

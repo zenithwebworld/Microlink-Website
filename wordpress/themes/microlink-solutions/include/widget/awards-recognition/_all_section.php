@@ -1,5 +1,5 @@
 <?php
-// Hero Section Widget
+// Awards Section Widget
 class Awards_Section_Widget extends WP_Widget {
     function __construct() {
         parent::__construct(
@@ -11,7 +11,23 @@ class Awards_Section_Widget extends WP_Widget {
 
     // Frontend Output
     public function widget($args, $instance) {
-        echo $args['before_widget']; ?>
+        echo $args['before_widget'];
+
+        $title    = !empty($instance['title']) ? $instance['title'] : 'Awards & Recognition';
+        $subtitle = !empty($instance['subtitle']) ? $instance['subtitle'] : 'Over the years, Microlink has been honored for its commitment to innovation, quality, and customer excellence. These recognitions reflect our dedication to delivering reliable solutions and building long-term partnerships based on trust and performance.';
+
+        $items = [];
+        for ($i = 1; $i <= 8; $i++) {
+            $img   = $instance["img_$i"] ?? '';
+            $label = $instance["label_$i"] ?? '';
+            if (!empty($img)) {
+                $items[] = [
+                    'img'   => $img,
+                    'label' => $label ?: 'Award Image'
+                ];
+            }
+        }
+        ?>
 
         <section class="gallery-section section-gap">
             <div class="container">
@@ -19,159 +35,28 @@ class Awards_Section_Widget extends WP_Widget {
                     <div class="col-12">
                         <div class="row justify-content-between align-items-center cm-nav">
                             <div class="col-lg-8">
-                                <h2 class="cm-title text-black fs-40 mb-2">Awards & Recognition</h2>
-                                <p>Over the years, Microlink has been honored for its commitment to innovation, quality, and customer excellence. These recognitions reflect our dedication to delivering reliable solutions and building long-term partnerships based on trust and performance. Each milestone inspires us to continue raising the standard of service we provide.</p>
+                                <h2 class="cm-title text-black fs-40 mb-2"><?php echo wp_kses_post($title); ?></h2>
+                                <p><?php echo esc_html($subtitle); ?></p>
                             </div>
                         </div>
 
                         <div class="mt-5">
                             <div class="row g-4">
-
-                                <div class="col-md-4 col-lg-3">
-                                    <a href="https://images.unsplash.com/photo-1558494949-ef010cbdcc31"
-                                    data-fancybox="gallery"
-                                    class="media-item position-relative">
- 
-                                        <figure class="thumbnail-container object-fit">
-                                            <div class="thumbnail">
-                                                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31"
-                                                    alt="Data Center"
-                                                    width="720" height="480">
-                                            </div>
-                                        </figure>
-
-                                    </a>
-                                </div>
-                                <div class="col-md-4 col-lg-3">
-                                    <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuDhdiikxYCjhNj_dp5OSKZfiqaBmDWM9i0xUM59whDDWulvvkGu-lj3s9hX0TyYmVa23ni8mSc60IMCDKVusLJUeZkvALQL9MMW_QpurHXTgRMSweYH2uadDqTAL7JjG8TSoyQtgIOiA5hJn52bUoyaX0BwtQR-4O7LIsrh-alDbzAvHrszCxbRLruUYkyE84vc7wBQm3tBZftdqmQ-dvQd_IB_xjpHEsOzdtOlB_1qpV6XmVYbh-1QEBmjDKPnWfjJbRGdpiHEHcQ"
-                                    data-fancybox="gallery"
-                                    class="media-item position-relative">
- 
-                                        <figure class="thumbnail-container object-fit">
-                                            <div class="thumbnail">
-                                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhdiikxYCjhNj_dp5OSKZfiqaBmDWM9i0xUM59whDDWulvvkGu-lj3s9hX0TyYmVa23ni8mSc60IMCDKVusLJUeZkvALQL9MMW_QpurHXTgRMSweYH2uadDqTAL7JjG8TSoyQtgIOiA5hJn52bUoyaX0BwtQR-4O7LIsrh-alDbzAvHrszCxbRLruUYkyE84vc7wBQm3tBZftdqmQ-dvQd_IB_xjpHEsOzdtOlB_1qpV6XmVYbh-1QEBmjDKPnWfjJbRGdpiHEHcQ"
-                                                    alt="Data Center"
-                                                    width="720" height="480">
-                                            </div>
-                                        </figure>
-
-                                    </a>
-                                </div>
-                                <div class="col-md-4 col-lg-3">
-                                    <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuCJnwxldcr0eTURpZnQGTfWI0CQPQLMwivvh6Ehhr1CmqQZO6Yc8K8Qw4afQmIhnROwppO2NoXgocLGfoBOTpnfcgVw2o95-fSpXYZ0Z6ckGiiCNAlmHssnu1hfMY3xi83sei8Hie539dCrSE18MFEb_Z88yBZF-pTRqqv3LfsamMlUiNmo9tVpJQtJbOK1Xp1mCSZg5IcHlNgmHtw7gJBjWCkoLjM45qH4BJ4GfCfhA3FM19fovSbExjduT9ZZ4_5hiD3Vqb7_4l8"
-                                    data-fancybox="gallery"
-                                    class="media-item position-relative">
- 
-                                        <figure class="thumbnail-container object-fit">
-                                            <div class="thumbnail">
-                                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJnwxldcr0eTURpZnQGTfWI0CQPQLMwivvh6Ehhr1CmqQZO6Yc8K8Qw4afQmIhnROwppO2NoXgocLGfoBOTpnfcgVw2o95-fSpXYZ0Z6ckGiiCNAlmHssnu1hfMY3xi83sei8Hie539dCrSE18MFEb_Z88yBZF-pTRqqv3LfsamMlUiNmo9tVpJQtJbOK1Xp1mCSZg5IcHlNgmHtw7gJBjWCkoLjM45qH4BJ4GfCfhA3FM19fovSbExjduT9ZZ4_5hiD3Vqb7_4l8"
-                                                    alt="Data Center"
-                                                    width="720" height="480">
-                                            </div>
-                                        </figure>
-
-                                    </a>
-                                </div>
-                                <div class="col-md-4 col-lg-3">
-                                    <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuCFukaP8PLUm1bLtzcr1kJXJwznblPNHucYzA4sYXfdJqtOLIZky-KrGJr7QzzHD9iPooDqwmvM5GGGWS-tY9mzkP9uXGFuMzkKwjP47jqisltMunEOJKhBIoOFaeU9cNuQGhit3tlKgyv0r4IVlAtmBX5KyZYlC751H9oXUH43QUt7QV2Td0roFnHrI23GiH8Pbw4IM6t5xNtB-ehcKz2J6m68hD9x7jDrQoLQ9AZINwo7aVDepgMQdwRHA-wGIUcbvxFgL07sIho"
-                                    data-fancybox="gallery"
-                                    class="media-item position-relative">
- 
-                                        <figure class="thumbnail-container object-fit">
-                                            <div class="thumbnail">
-                                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFukaP8PLUm1bLtzcr1kJXJwznblPNHucYzA4sYXfdJqtOLIZky-KrGJr7QzzHD9iPooDqwmvM5GGGWS-tY9mzkP9uXGFuMzkKwjP47jqisltMunEOJKhBIoOFaeU9cNuQGhit3tlKgyv0r4IVlAtmBX5KyZYlC751H9oXUH43QUt7QV2Td0roFnHrI23GiH8Pbw4IM6t5xNtB-ehcKz2J6m68hD9x7jDrQoLQ9AZINwo7aVDepgMQdwRHA-wGIUcbvxFgL07sIho"
-                                                    alt="Data Center"
-                                                    width="720" height="480">
-                                            </div>
-                                        </figure>
-
-                                    </a>
-                                </div>
-                                <div class="col-md-4 col-lg-3">
-                                    <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuB7yWOEnLcMFuOsvx6_Tu68LuMYRMJfPgDAUT5NRq_5Qn8WN2yAsUo6s-S9BVzXq3QZgnRegHq_NhKCN9EZW0ouvLDs85gR0JgqPgA7HZv8_g1Bb3La2Bu-Lr00Ns0jZU-KEGsFgvo1b-IQAApw1T7PT8xY41eYMFtGH2CJLD-KshgJV2wgX3HI_tmKuzu4wmY9Kg4hHYYnRvuj53uFCT4CkO33QLmw2uno_XW9hFEr3eK5DkG0btq1KTZvugDxjK-V25OgzzwA8Pg"
-                                    data-fancybox="gallery"
-                                    class="media-item position-relative">
- 
-                                        <figure class="thumbnail-container object-fit">
-                                            <div class="thumbnail">
-                                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7yWOEnLcMFuOsvx6_Tu68LuMYRMJfPgDAUT5NRq_5Qn8WN2yAsUo6s-S9BVzXq3QZgnRegHq_NhKCN9EZW0ouvLDs85gR0JgqPgA7HZv8_g1Bb3La2Bu-Lr00Ns0jZU-KEGsFgvo1b-IQAApw1T7PT8xY41eYMFtGH2CJLD-KshgJV2wgX3HI_tmKuzu4wmY9Kg4hHYYnRvuj53uFCT4CkO33QLmw2uno_XW9hFEr3eK5DkG0btq1KTZvugDxjK-V25OgzzwA8Pg"
-                                                    alt="Data Center"
-                                                    width="720" height="480">
-                                            </div>
-                                        </figure>
-
-                                    </a>
-                                </div>
-
-                                <div class="col-md-4 col-lg-3">
-                                    <a href="https://images.unsplash.com/photo-1563986768609-322da13575f3"
-                                    data-fancybox="gallery"
-                                    class="media-item position-relative">
- 
-                                        <figure class="thumbnail-container object-fit">
-                                            <div class="thumbnail">
-                                                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3"
-                                                    alt="Cyber Security"
-                                                    width="720" height="480">
-                                            </div>
-                                        </figure>
-
-                                    </a>
-                                </div>
-                                <div class="col-md-4 col-lg-3">
-                                    <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuB7yWOEnLcMFuOsvx6_Tu68LuMYRMJfPgDAUT5NRq_5Qn8WN2yAsUo6s-S9BVzXq3QZgnRegHq_NhKCN9EZW0ouvLDs85gR0JgqPgA7HZv8_g1Bb3La2Bu-Lr00Ns0jZU-KEGsFgvo1b-IQAApw1T7PT8xY41eYMFtGH2CJLD-KshgJV2wgX3HI_tmKuzu4wmY9Kg4hHYYnRvuj53uFCT4CkO33QLmw2uno_XW9hFEr3eK5DkG0btq1KTZvugDxjK-V25OgzzwA8Pg"
-                                    data-fancybox="gallery"
-                                    class="media-item position-relative">
- 
-                                        <figure class="thumbnail-container object-fit">
-                                            <div class="thumbnail">
-                                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7yWOEnLcMFuOsvx6_Tu68LuMYRMJfPgDAUT5NRq_5Qn8WN2yAsUo6s-S9BVzXq3QZgnRegHq_NhKCN9EZW0ouvLDs85gR0JgqPgA7HZv8_g1Bb3La2Bu-Lr00Ns0jZU-KEGsFgvo1b-IQAApw1T7PT8xY41eYMFtGH2CJLD-KshgJV2wgX3HI_tmKuzu4wmY9Kg4hHYYnRvuj53uFCT4CkO33QLmw2uno_XW9hFEr3eK5DkG0btq1KTZvugDxjK-V25OgzzwA8Pg"
-                                                    alt="Cyber Security"
-                                                    width="720" height="480">
-                                            </div>
-                                        </figure>
-
-                                    </a>
-                                </div>
-                                <div class="col-md-4 col-lg-3">
-                                    <a href="https://lh3.googleusercontent.com/aida-public/AB6AXuALVGxbzQmzK6VYH3r2BMAtkGNwakuvr5pbjwc272HztIyqiaNZqZZ_5EbDh3JC9wb3m8w-_CB7ue0eHFe2UDE2jGo4RRIr5hiQo6iA_ejYV7Ulf7UkQc9Tmh82B73IIkCbQ3mbEGjQFUDY5bbHRvlZ9CPwmUP0gcnUJ3I0HbA4f7IDuBXQ2EEwkTZaDWr9Cno0pGHEJwLinZ3013KEtSCA_SFq5iHAhzRBNKXNCgcVb4RMI5JMO7QMpu5BXFLjh8junkI5OyDxzxA"
-                                    data-fancybox="gallery"
-                                    class="media-item position-relative">
- 
-                                        <figure class="thumbnail-container object-fit">
-                                            <div class="thumbnail">
-                                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuALVGxbzQmzK6VYH3r2BMAtkGNwakuvr5pbjwc272HztIyqiaNZqZZ_5EbDh3JC9wb3m8w-_CB7ue0eHFe2UDE2jGo4RRIr5hiQo6iA_ejYV7Ulf7UkQc9Tmh82B73IIkCbQ3mbEGjQFUDY5bbHRvlZ9CPwmUP0gcnUJ3I0HbA4f7IDuBXQ2EEwkTZaDWr9Cno0pGHEJwLinZ3013KEtSCA_SFq5iHAhzRBNKXNCgcVb4RMI5JMO7QMpu5BXFLjh8junkI5OyDxzxA"
-                                                    alt="Cyber Security"
-                                                    width="720" height="480">
-                                            </div>
-                                        </figure>
-
-                                    </a>
-                                </div>
-
-                            </div>
-                             <div class="row mt-5">
-                                <div class="col-12 d-flex justify-content-center">
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination">
-                                            <li class="page-item disabled">
-                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                            </li>
-                                            <li class="page-item active" aria-current="page">
-                                                <a class="page-link" href="#">1</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">2</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">3</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">Next</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
+                                <?php if (!empty($items)) : ?>
+                                    <?php foreach ($items as $item) : ?>
+                                        <div class="col-md-4 col-lg-3">
+                                            <a href="<?php echo esc_url($item['img']); ?>" data-fancybox="gallery" class="media-item position-relative">
+                                                <figure class="thumbnail-container object-fit">
+                                                    <div class="thumbnail">
+                                                        <img src="<?php echo esc_url($item['img']); ?>" alt="<?php echo esc_attr($item['label']); ?>" width="720" height="480">
+                                                    </div>
+                                                </figure>
+                                            </a>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
+                                    <div class="col-12 text-center text-muted"><p>No awards added yet.</p></div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -183,13 +68,43 @@ class Awards_Section_Widget extends WP_Widget {
     }
 
     // Backend Form
-    public function form($instance) { ?>
+    public function form($instance) {
+        $title    = $instance['title'] ?? '';
+        $subtitle = $instance['subtitle'] ?? '';
+        ?>
+
+        <p><label>Section Title (HTML allowed e.g. &lt;span&gt;)</label>
+        <input class="widefat" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo esc_attr($title); ?>"></p>
+
+        <p><label>Section Subtitle</label>
+        <textarea class="widefat" rows="3" name="<?php echo $this->get_field_name('subtitle'); ?>"><?php echo esc_textarea($subtitle); ?></textarea></p>
+
+        <hr>
+        <h4>Award Items</h4>
+        <?php for ($i = 1; $i <= 8; $i++) : ?>
+            <p><strong>Award Item <?php echo $i; ?></strong></p>
+            <p>
+                <input class="widefat" placeholder="Image URL" name="<?php echo $this->get_field_name("img_$i"); ?>" value="<?php echo esc_attr($instance["img_$i"] ?? ''); ?>">
+            </p>
+            <p>
+                <input class="widefat" placeholder="Alt Label" name="<?php echo $this->get_field_name("label_$i"); ?>" value="<?php echo esc_attr($instance["label_$i"] ?? ''); ?>">
+            </p>
+            <hr>
+        <?php endfor; ?>
 
     <?php }
 
-    // Save Data (FIXED SAFE VERSION)
+    // Save Data
     public function update($new_instance, $old_instance) {
         $instance = [];
+        $instance['title']    = !empty($new_instance['title']) ? wp_kses_post($new_instance['title']) : '';
+        $instance['subtitle'] = !empty($new_instance['subtitle']) ? sanitize_textarea_field($new_instance['subtitle']) : '';
+
+        for ($i = 1; $i <= 8; $i++) {
+            $instance["img_$i"]   = !empty($new_instance["img_$i"]) ? esc_url_raw($new_instance["img_$i"]) : '';
+            $instance["label_$i"] = !empty($new_instance["label_$i"]) ? sanitize_text_field($new_instance["label_$i"]) : '';
+        }
+
         return $instance;
     }
 }
