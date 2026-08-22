@@ -1,11 +1,11 @@
 <?php
-// Awards Section Widget
+// Awards Section Widget (Dynamic Custom Post Type Query)
 class Awards_Section_Widget extends WP_Widget {
     function __construct() {
         parent::__construct(
             'awards_section',
             __('Awards :: All Section', _THEME_DOMAIN),
-            array('description' => __('Update awards page content', _THEME_DOMAIN))
+            array('description' => __('Display awards dynamically from Awards & Recognition CPT', _THEME_DOMAIN))
         );
     }
 
@@ -15,18 +15,6 @@ class Awards_Section_Widget extends WP_Widget {
 
         $title    = !empty($instance['title']) ? $instance['title'] : 'Awards & Recognition';
         $subtitle = !empty($instance['subtitle']) ? $instance['subtitle'] : 'Over the years, Microlink has been honored for its commitment to innovation, quality, and customer excellence. These recognitions reflect our dedication to delivering reliable solutions and building long-term partnerships based on trust and performance.';
-
-        $items = [];
-        for ($i = 1; $i <= 8; $i++) {
-            $img   = $instance["img_$i"] ?? '';
-            $label = $instance["label_$i"] ?? '';
-            if (!empty($img)) {
-                $items[] = [
-                    'img'   => $img,
-                    'label' => $label ?: 'Award Image'
-                ];
-            }
-        }
         ?>
 
         <section class="gallery-section section-gap">
@@ -42,21 +30,41 @@ class Awards_Section_Widget extends WP_Widget {
 
                         <div class="mt-5">
                             <div class="row g-4">
-                                <?php if (!empty($items)) : ?>
-                                    <?php foreach ($items as $item) : ?>
-                                        <div class="col-md-4 col-lg-3">
-                                            <a href="<?php echo esc_url($item['img']); ?>" data-fancybox="gallery" class="media-item position-relative">
-                                                <figure class="thumbnail-container object-fit">
-                                                    <div class="thumbnail">
-                                                        <img src="<?php echo esc_url($item['img']); ?>" alt="<?php echo esc_attr($item['label']); ?>" width="720" height="480">
-                                                    </div>
-                                                </figure>
-                                            </a>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php else : ?>
-                                    <div class="col-12 text-center text-muted"><p>No awards added yet.</p></div>
-                                <?php endif; ?>
+                                <?php
+                                $awards_query = new WP_Query([
+                                    'post_type'      => 'award',
+                                    'posts_per_page' => -1,
+                                    'orderby'        => 'menu_order title',
+                                    'order'          => 'ASC'
+                                ]);
+
+                                if ($awards_query->have_posts()) :
+                                    while ($awards_query->have_posts()) : $awards_query->the_post();
+                                        $img_url    = get_post_meta(get_the_ID(), '_award_image_url', true) ?: get_the_post_thumbnail_url(get_the_ID(), 'full');
+                                        $post_title = get_the_title();
+                                        $subtitle   = get_post_meta(get_the_ID(), '_award_subtitle', true);
+                                        $label      = !empty($subtitle) ? $post_title . ' - ' . $subtitle : $post_title;
+
+                                        if (empty($img_url)) {
+                                            continue;
+                                        }
+                                ?>
+                                    <div class="col-md-4 col-lg-3">
+                                        <a href="<?php echo esc_url($img_url); ?>" data-fancybox="gallery" class="media-item position-relative" title="<?php echo esc_attr($label); ?>">
+                                            <figure class="thumbnail-container object-fit">
+                                                <div class="thumbnail">
+                                                    <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($label); ?>" width="720" height="480">
+                                                </div>
+                                            </figure>
+                                        </a>
+                                    </div>
+                                <?php
+                                    endwhile;
+                                    wp_reset_postdata();
+                                else :
+                                    echo '<div class="col-12 text-center text-muted"><p>No awards published yet. Add items in WP Admin -> Awards & Recognition.</p></div>';
+                                endif;
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -79,18 +87,9 @@ class Awards_Section_Widget extends WP_Widget {
         <p><label>Section Subtitle</label>
         <textarea class="widefat" rows="3" name="<?php echo $this->get_field_name('subtitle'); ?>"><?php echo esc_textarea($subtitle); ?></textarea></p>
 
-        <hr>
-        <h4>Award Items</h4>
-        <?php for ($i = 1; $i <= 8; $i++) : ?>
-            <p><strong>Award Item <?php echo $i; ?></strong></p>
-            <p>
-                <input class="widefat" placeholder="Image URL" name="<?php echo $this->get_field_name("img_$i"); ?>" value="<?php echo esc_attr($instance["img_$i"] ?? ''); ?>">
-            </p>
-            <p>
-                <input class="widefat" placeholder="Alt Label" name="<?php echo $this->get_field_name("label_$i"); ?>" value="<?php echo esc_attr($instance["label_$i"] ?? ''); ?>">
-            </p>
-            <hr>
-        <?php endfor; ?>
+        <p class="description">
+            <em>Note: Award items and images are automatically queried from the <strong>Awards & Recognition</strong> Custom Post Type (`award`). Add and manage awards in WP Admin -> Awards & Recognition!</em>
+        </p>
 
     <?php }
 
@@ -99,12 +98,6 @@ class Awards_Section_Widget extends WP_Widget {
         $instance = [];
         $instance['title']    = !empty($new_instance['title']) ? wp_kses_post($new_instance['title']) : '';
         $instance['subtitle'] = !empty($new_instance['subtitle']) ? sanitize_textarea_field($new_instance['subtitle']) : '';
-
-        for ($i = 1; $i <= 8; $i++) {
-            $instance["img_$i"]   = !empty($new_instance["img_$i"]) ? esc_url_raw($new_instance["img_$i"]) : '';
-            $instance["label_$i"] = !empty($new_instance["label_$i"]) ? sanitize_text_field($new_instance["label_$i"]) : '';
-        }
-
         return $instance;
     }
 }

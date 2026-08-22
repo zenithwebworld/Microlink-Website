@@ -194,6 +194,8 @@ require get_template_directory() . '/include/post_type/testimonial.php';
 require get_template_directory() . '/include/post_type/teams.php';
 require get_template_directory() . '/include/post_type/stories.php';
 require get_template_directory() . '/include/post_type/jobs.php';
+require get_template_directory() . '/include/post_type/life.php';
+require get_template_directory() . '/include/post_type/awards.php';
 
 // Include widgets (Common)
 require get_template_directory() . '/include/widget/common/_page_header.php';
