@@ -79,18 +79,9 @@ $banner        = !empty($banner) ? $banner : get_template_directory_uri() . '/as
                                 $r_icon  = get_post_meta(get_the_ID(), '_solution_icon', true) ?: 's-cybersecurity-solutions';
                         ?>
 
-                            <a href="<?php echo esc_url($r_link); ?>" class="service-item d-flex align-items-center mb-3 text-decoration-none text-dark">
-                                <div class="icon-box mb-0 me-3">
-                                    <span class="material-icons">
-                                        <i class="n-icon text-primary"
-                                           data-icon="<?php echo esc_attr($r_icon); ?>"
-                                           data-iconwidth="35px"
-                                           data-iconheight="35px"></i>
-                                    </span>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold"><?php echo esc_html($r_title); ?></h6>
-                                </div>
+                            <a href="<?php echo esc_url($r_link); ?>" class="d-flex align-items-center py-2 text-decoration-none text-dark border-bottom border-light">
+                                <i class="n-icon text-primary me-2 flex-shrink-0" data-icon="s-right-dubble" data-iconwidth="12px" data-iconheight="12px"></i>
+                                <span class="fw-medium text-dark"><?php echo esc_html($r_title); ?></span>
                             </a>
 
                         <?php
