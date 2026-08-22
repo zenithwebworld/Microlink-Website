@@ -1,6 +1,6 @@
 <?php
 /**
- * The main template file
+ * The template for displaying archive pages (Categories, Tags, Authors, Dates)
  *
  * @package microlink-solutions
  */
@@ -8,7 +8,7 @@
 get_header();
 
 $banner_img = get_template_directory_uri() . '/assets/images/i-banner.jpg';
-$page_title = is_home() ? 'Blog' : get_the_title();
+$page_title = get_the_archive_title();
 ?>
 
 <!-- Inner Banner Section -->
@@ -23,13 +23,13 @@ $page_title = is_home() ? 'Blog' : get_the_title();
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
-                        <h1 class="cm-title text-white"><?php echo esc_html($page_title); ?></h1>
+                        <h1 class="cm-title text-white"><?php echo wp_kses_post($page_title); ?></h1>
                         <div class="breadcrumb-nav mt-3">
                             <a href="<?php echo esc_url(home_url('/')); ?>" class="text-white" title="Home">
                                 Home
                             </a>
                             <span class="text-white mx-2">-</span>
-                            <span class="text-white"><?php echo esc_html($page_title); ?></span>
+                            <span class="text-white">Blog Archive</span>
                         </div>
                     </div>
                 </div>

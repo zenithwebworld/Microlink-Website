@@ -1,14 +1,18 @@
 <?php
 /**
- * The main template file
+ * The template for displaying the blog posts index page
  *
  * @package microlink-solutions
  */
 
 get_header();
 
+$page_for_posts_id = get_option('page_for_posts');
 $banner_img = get_template_directory_uri() . '/assets/images/i-banner.jpg';
-$page_title = is_home() ? 'Blog' : get_the_title();
+if ($page_for_posts_id && has_post_thumbnail($page_for_posts_id)) {
+    $banner_img = get_the_post_thumbnail_url($page_for_posts_id, 'full');
+}
+$page_title = $page_for_posts_id ? get_the_title($page_for_posts_id) : 'Blog';
 ?>
 
 <!-- Inner Banner Section -->
