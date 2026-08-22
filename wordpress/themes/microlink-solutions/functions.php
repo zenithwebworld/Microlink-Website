@@ -196,9 +196,11 @@ require get_template_directory() . '/include/post_type/stories.php';
 require get_template_directory() . '/include/post_type/jobs.php';
 require get_template_directory() . '/include/post_type/life.php';
 require get_template_directory() . '/include/post_type/awards.php';
+require get_template_directory() . '/include/post_type/case_studies.php';
 
 // Include widgets (Common)
 require get_template_directory() . '/include/widget/common/_page_header.php';
+require get_template_directory() . '/include/widget/common/_case_studies_section.php';
 
 // Include widgets (Homepage)
 require get_template_directory() . '/include/widget/homepage/_hero_section.php';
@@ -350,6 +352,17 @@ function microlink_solutions_customize_register($wp_customize) {
         'label'   => __('Footer Address', _THEME_DOMAIN),
         'section' => 'footer_settings_section',
         'type'    => 'textarea',
+    ));
+
+    // Office Hours
+    $wp_customize->add_setting('footer_office_hours', array(
+        'default'           => 'Monday to Friday: 9:00 am to 6:00 pm',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('footer_office_hours', array(
+        'label'   => __('Office Hours', _THEME_DOMAIN),
+        'section' => 'footer_settings_section',
+        'type'    => 'text',
     ));
 
     // Social Links
