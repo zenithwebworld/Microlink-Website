@@ -82,8 +82,18 @@ class Advanced_Mega_Menu_Walker extends Walker_Nav_Menu {
         // 🔹 SOLUTIONS COLUMN
         elseif ($depth === 1 && $this->menu_type === 'solutions') {
 
+            $url = $item->url;
+            if (empty($url) || $url === '#') {
+                $term = get_term_by('name', $item->title, 'solution_category');
+                if ($term && !is_wp_error($term)) {
+                    $url = get_term_link($term);
+                } else {
+                    $url = home_url('/solutions');
+                }
+            }
+
             $output .= '<li>';
-            $output .= '<a href="#" class="mm_title">' . esc_html($item->title) . '</a>';
+            $output .= '<a href="' . esc_url($url) . '" class="mm_title">' . esc_html($item->title) . '</a>';
         }
 
         // 🔹 SOLUTIONS SUB ITEMS

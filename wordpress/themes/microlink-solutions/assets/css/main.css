@@ -1578,6 +1578,12 @@ body img {
     transition: all 0.2s ease-in-out;
     padding-bottom: 6px;
     font-family: var(--ff-one);
+    text-decoration: none;
+  }
+
+  .header-section .menu ul .mega-menu .mm_title:hover {
+    color: var(--primary) !important;
+    border-bottom-color: var(--primary) !important;
   }
 
   .header-section .menu ul .mega-menu>li {
