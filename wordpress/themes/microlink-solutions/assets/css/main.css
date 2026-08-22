@@ -3538,15 +3538,8 @@ body img {
 }
 
 .inner-banner-01 .custom-breadcrumb-1 li:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: -12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 4px;
-  background-color: var(--primary);
-  border-radius: 50%;
+  content: none !important;
+  display: none !important;
 }
 
 .inner-banner-01 .custom-breadcrumb-1 li a {
