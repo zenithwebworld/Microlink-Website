@@ -1,11 +1,11 @@
 <?php
-// Home Service Section Widget
+// Home Service Section Widget (Fully Dynamic & Attractive UI)
 class Home_Service_Section_Widget extends WP_Widget {
     function __construct() {
         parent::__construct(
             'home_service_section',
             __('Homepage :: Service Section', _THEME_DOMAIN),
-            array('description' => __('Update service section content', _THEME_DOMAIN))
+            array('description' => __('Update homepage service section content', _THEME_DOMAIN))
         );
     }
 
@@ -16,22 +16,22 @@ class Home_Service_Section_Widget extends WP_Widget {
         $title    = !empty($instance['title']) ? $instance['title'] : 'Our Services <span>IT Services</span>';
         $subtitle = !empty($instance['subtitle']) ? $instance['subtitle'] : 'Our engineers will work 24*7 to provide you seamless IT Operations';
         ?>
-        <section class="service-cards-section section-gap double-gap-t bg-light">
+        <section class="service-cards-section section-gap bg-light">
             <div class="container">
-                <div class="row justify-content-center section-intro mb-lg-5 mb-4" data-aos="fade-up" data-aos-delay="80">
+                <div class="row justify-content-center section-intro mb-lg-4 mb-3" data-aos="fade-up" data-aos-delay="80">
                     <div class="col-lg-8 text-center">
                         <h2 class="cm-title fs-40 text-black"><?php echo wp_kses_post($title); ?></h2>
-                        <p class="text-muted mt-3"><?php echo esc_html($subtitle); ?></p>
+                        <p class="text-muted mt-2 mb-0"><?php echo esc_html($subtitle); ?></p>
                     </div>
                 </div>
 
-                <div class="owl-carousel services-owl pb-lg-5 pb-4">
+                <div class="owl-carousel services-owl pb-lg-4 pb-3">
                     <?php
-                    // First try query with primary filter, if empty fallback to all services
+                    // Query primary page services first, fallback to all services if none flagged primary
                     $services = new WP_Query([
                         'post_type'      => 'service',
                         'posts_per_page' => -1,
-                        'orderby'        => 'menu_order',
+                        'orderby'        => 'menu_order title',
                         'order'          => 'ASC',
                         'meta_query'     => [
                             [
@@ -46,7 +46,7 @@ class Home_Service_Section_Widget extends WP_Widget {
                         $services = new WP_Query([
                             'post_type'      => 'service',
                             'posts_per_page' => -1,
-                            'orderby'        => 'menu_order',
+                            'orderby'        => 'menu_order title',
                             'order'          => 'ASC'
                         ]);
                     }
@@ -58,7 +58,7 @@ class Home_Service_Section_Widget extends WP_Widget {
 
                             $service_title = get_the_title();
                             $desc          = get_post_meta(get_the_ID(), '_service_short_desc', true);
-                            $icon          = get_post_meta(get_the_ID(), '_service_icon', true);
+                            $icon          = get_post_meta(get_the_ID(), '_service_icon', true) ?: 's-cybersecurity-solutions';
                             $list          = get_post_meta(get_the_ID(), 'services_list', true);
                             $link          = get_permalink();
                     ?>
@@ -66,15 +66,13 @@ class Home_Service_Section_Widget extends WP_Widget {
                     <div class="item">
                         <div class="service-card c-card h-100 p-4 bg-white rounded-3 d-flex flex-column" data-aos="fade-up" data-aos-delay="<?php echo esc_attr($delay); ?>">
                             <div class="d-flex align-items-center mb-3">
-                                <?php if (!empty($icon)) : ?>
-                                    <div class="service-icon bg-soft me-3">
-                                        <i class="n-icon text-primary"
-                                           data-icon="<?php echo esc_attr($icon); ?>"
-                                           data-iconwidth="35px"
-                                           data-iconheight="35px"></i>
-                                    </div>
-                                <?php endif; ?>
-                                <h5 class="m-0 fw-bold"><?php echo esc_html($service_title); ?></h5>
+                                <div class="service-icon bg-soft me-3">
+                                    <i class="n-icon text-primary"
+                                       data-icon="<?php echo esc_attr($icon); ?>"
+                                       data-iconwidth="30px"
+                                       data-iconheight="30px"></i>
+                                </div>
+                                <h5 class="m-0 fw-bold fs-5 text-black"><?php echo esc_html($service_title); ?></h5>
                             </div>
 
                             <?php if (!empty($desc)) : ?>
@@ -87,7 +85,7 @@ class Home_Service_Section_Widget extends WP_Widget {
                                 </div>
                             <?php endif; ?>
 
-                            <div class="mt-auto pt-3">
+                            <div class="mt-auto pt-2">
                                 <a href="<?php echo esc_url($link); ?>" class="btn btn-link button-up p-0 text-decoration-none fw-bold" title="Read More">Read More</a>
                             </div>
                         </div>
