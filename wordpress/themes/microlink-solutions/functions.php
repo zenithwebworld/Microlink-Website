@@ -122,7 +122,7 @@ function microlink_solutions_scripts() {
         'main-style',
         get_template_directory_uri() . '/assets/css/main.css',
         array(),
-        '1.0'
+        filemtime(get_template_directory() . '/assets/css/main.css')
     );
 
     // jQuery (WordPress default OR CDN)

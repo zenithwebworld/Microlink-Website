@@ -2237,7 +2237,6 @@ body img {
   bottom: 0;
   left: 0;
   z-index: 1;
-  animation: leftright 2s linear infinite;
 }
 
 .banner-bg-1 {
@@ -2247,7 +2246,6 @@ body img {
   top: 0;
   right: 0;
   z-index: 1;
-  animation: updown 2s linear infinite;
 }
 
 .banner-section .caption::after {
@@ -2381,7 +2379,7 @@ body img {
   right: -150px;
   bottom: -150px;
   border-radius: 30px;
-  animation: updown 2s linear infinite;
+  animation: none !important;
 }
 
 .about-section .cms ul {
