@@ -290,4 +290,25 @@ $(document).ready(function(){
             svgIcon(); // Recalling svgIcon function after Owl Carousel initialization
         }
     });
+
+    /* Application Form Input Real-time Validation S */
+    // Text-only input restrict (Allow letters, spaces, hyphens, apostrophes, dots)
+    $(document).on('input', '.text-only-input', function () {
+        this.value = this.value.replace(/[^A-Za-z\s'\.-]/g, '');
+    });
+
+    // Phone input restrict (Allow + sign at start, digits, spaces, and hyphens)
+    $(document).on('input', '.phone-input', function () {
+        var val = this.value;
+        // ensure '+' only at index 0, rest digits/spaces/dashes
+        var hasPlus = val.startsWith('+');
+        var cleaned = val.replace(/[^0-9\s-]/g, '');
+        this.value = (hasPlus ? '+' : '') + cleaned;
+    });
+
+    // Number-only input restrict
+    $(document).on('input', '.number-only-input', function () {
+        this.value = this.value.replace(/[^0-9.]/g, '');
+    });
+    /* Application Form Input Real-time Validation E */
 });

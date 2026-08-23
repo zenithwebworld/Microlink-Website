@@ -222,6 +222,7 @@ require get_template_directory() . '/include/widget/about/_stories_section.php';
 require get_template_directory() . '/include/widget/career/_intro_section.php';
 require get_template_directory() . '/include/widget/career/_positions_section.php';
 require get_template_directory() . '/include/widget/career/_life_section.php';
+require get_template_directory() . '/include/widget/career/_form_section.php';
 
 // Include widgets (Other Pages)
 require get_template_directory() . '/include/widget/contact/_all_section.php';

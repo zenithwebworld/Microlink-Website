@@ -100,7 +100,7 @@ class Career_Position_Section_Widget extends WP_Widget {
                                     </div>
 
                                     <div class="mt-4 d-grid gap-2">
-                                        <a href="<?php echo esc_url(home_url('/application-form?job_id=' . $job_id)); ?>" class="btn btn-primary">
+                                        <a href="<?php echo esc_url(home_url('/candidate-form?job_title=' . urlencode(get_the_title()) . '&job_id=' . esc_attr($job_id))); ?>" class="btn btn-primary" title="Apply Now">
                                             Apply Now
                                         </a>
                                     </div>

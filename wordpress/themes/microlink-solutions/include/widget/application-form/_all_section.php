@@ -39,26 +39,23 @@ class Application_Form_Section_Widget extends WP_Widget {
                                 <div class="row g-4">
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Full Name *</label>
-                                        <input type="text" class="form-control form-control-lg" placeholder="Your name"
-                                            required>
+                                        <input type="text" class="form-control form-control-lg text-only-input" placeholder="Your name" pattern="^[A-Za-z\s'\.-]{2,50}$" title="Please enter a valid name (letters and spaces only)." required>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Email Address *</label>
-                                        <input type="email" class="form-control form-control-lg"
-                                            placeholder="your@email.com" required>
+                                        <input type="email" class="form-control form-control-lg" placeholder="your@email.com" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email address (e.g. user@domain.com)." required>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold">Phone Number *</label>
-                                        <input type="tel" class="form-control form-control-lg"
-                                            placeholder="+91 00000 00000" required>
+                                        <label class="form-label fw-bold">Phone Number (with Country Code) *</label>
+                                        <input type="tel" class="form-control form-control-lg phone-input" placeholder="+91 98244 08739" pattern="^\+\d{1,4}[- .]?\d{6,14}$" title="Please enter phone number with country code starting with + (e.g. +91 98244 08739)." required>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Gender *</label>
                                         <select class="form-select form-select-lg" required>
-                                            <option selected disabled>Select Gender</option>
+                                            <option selected disabled value="">Select Gender</option>
                                             <option>Male</option>
                                             <option>Female</option>
                                             <option>Other</option>
@@ -67,56 +64,47 @@ class Application_Form_Section_Widget extends WP_Widget {
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Title *</label>
-                                        <input type="text" class="form-control form-control-lg"
-                                            placeholder="e.g. Software Developer" required>
+                                        <input type="text" class="form-control form-control-lg text-only-input" placeholder="e.g. Software Developer" pattern="^[A-Za-z\s'\.-]{2,100}$" title="Please enter a valid title using letters and spaces." required>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Key Skills *</label>
-                                        <input type="text" class="form-control form-control-lg"
-                                            placeholder="e.g. Java, Python, SQL" required>
+                                        <input type="text" class="form-control form-control-lg" placeholder="e.g. Java, Python, SQL" required>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Years of Experience *</label>
-                                        <input type="number" class="form-control form-control-lg" placeholder="e.g. 5"
-                                            required>
+                                        <input type="number" step="0.5" min="0" max="60" class="form-control form-control-lg number-only-input" placeholder="e.g. 5" required>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Current Salary *</label>
-                                        <input type="text" class="form-control form-control-lg"
-                                            placeholder="e.g. 10 LPA" required>
+                                        <input type="text" class="form-control form-control-lg" placeholder="e.g. 10 LPA" required>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Expected Salary *</label>
-                                        <input type="text" class="form-control form-control-lg"
-                                            placeholder="e.g. 15 LPA" required>
+                                        <input type="text" class="form-control form-control-lg" placeholder="e.g. 15 LPA" required>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold">Notice Period *</label>
-                                        <input type="number" class="form-control form-control-lg" placeholder="e.g. 30"
-                                            required>
+                                        <label class="form-label fw-bold">Notice Period (Days) *</label>
+                                        <input type="number" min="0" max="365" class="form-control form-control-lg number-only-input" placeholder="e.g. 30" required>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Add Your Social Link</label>
-                                        <input type="url" class="form-control form-control-lg"
-                                            placeholder="e.g. https://linkedin.com/in/yourprofile">
+                                        <input type="url" class="form-control form-control-lg" placeholder="e.g. https://linkedin.com/in/yourprofile">
                                     </div>
 
                                     <div class="col-md-12">
                                         <label class="form-label fw-bold">Upload Resume *</label>
-                                        <input type="file" class="form-control form-control-lg" accept=".pdf,.doc,.docx"
-                                            required>
+                                        <input type="file" class="form-control form-control-lg" accept=".pdf,.doc,.docx" required>
                                         <div class="form-text">PDF or DOCX (Max. 10MB)</div>
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label fw-bold">Comment</label>
-                                        <textarea class="form-control form-control-lg" rows="5"
-                                            placeholder="Add your comments..."></textarea>
+                                        <textarea class="form-control form-control-lg" rows="5" placeholder="Add your comments..."></textarea>
                                     </div>
 
                                 </div>
