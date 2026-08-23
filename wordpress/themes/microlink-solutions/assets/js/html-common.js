@@ -297,13 +297,68 @@ $(document).ready(function(){
         this.value = this.value.replace(/[^A-Za-z\s'\.-]/g, '');
     });
 
-    // Phone input restrict (Allow + sign at start, digits, spaces, and hyphens)
-    $(document).on('input', '.phone-input', function () {
+    // Phone Auto-Format (+91 9874563214)
+    $(document).on('focus', 'input[type="tel"], .phone-input', function () {
+        if (!this.value) {
+            this.value = '+91 ';
+        }
+    });
+
+    $(document).on('blur', 'input[type="tel"], .phone-input', function () {
+        if (this.value === '+91 ' || this.value === '+91') {
+            this.value = '';
+        }
+        validatePhoneField(this);
+    });
+
+    $(document).on('input', 'input[type="tel"], .phone-input', function () {
         var val = this.value;
-        // ensure '+' only at index 0, rest digits/spaces/dashes
-        var hasPlus = val.startsWith('+');
-        var cleaned = val.replace(/[^0-9\s-]/g, '');
-        this.value = (hasPlus ? '+' : '') + cleaned;
+        var digits = val.replace(/\D/g, '');
+
+        if (digits.length === 0) {
+            this.value = '+91 ';
+        } else if (digits.startsWith('91')) {
+            var numberPart = digits.substring(2, 12);
+            this.value = '+91 ' + numberPart;
+        } else {
+            var numberPart = digits.substring(0, 10);
+            this.value = '+91 ' + numberPart;
+        }
+        validatePhoneField(this);
+    });
+
+    function validatePhoneField(el) {
+        var pattern = /^\+\d{1,4}\s\d{10}$/;
+        var val = el.value.trim();
+
+        // If empty or only +91/prefix without 10 digits
+        if (val === '' || val === '+91 ' || val === '+91') {
+            el.setCustomValidity("");
+            $(el).removeClass('is-invalid is-valid');
+        } else if (!pattern.test(val)) {
+            el.setCustomValidity("Please enter a valid 10-digit mobile number with country code (e.g. +91 9874563214).");
+            $(el).addClass('is-invalid').removeClass('is-valid');
+        } else {
+            el.setCustomValidity("");
+            $(el).addClass('is-valid').removeClass('is-invalid');
+        }
+    }
+
+    // Live Email Validation Feedback
+    $(document).on('input blur', 'input[type="email"]', function () {
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        var val = this.value.trim();
+
+        if (val.length > 0 && !emailPattern.test(val)) {
+            this.setCustomValidity("Please enter a valid email address (e.g. user@domain.com).");
+            $(this).addClass('is-invalid').removeClass('is-valid');
+        } else if (emailPattern.test(val)) {
+            this.setCustomValidity("");
+            $(this).addClass('is-valid').removeClass('is-invalid');
+        } else {
+            this.setCustomValidity("");
+            $(this).removeClass('is-invalid is-valid');
+        }
     });
 
     // Number-only input restrict

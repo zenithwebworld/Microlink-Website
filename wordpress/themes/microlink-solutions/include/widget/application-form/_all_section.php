@@ -45,11 +45,13 @@ class Application_Form_Section_Widget extends WP_Widget {
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Email Address *</label>
                                         <input type="email" class="form-control form-control-lg" placeholder="your@email.com" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email address (e.g. user@domain.com)." required>
+                                        <div class="invalid-feedback">Please enter a valid email address (e.g. name@example.com).</div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Phone Number (with Country Code) *</label>
-                                        <input type="tel" class="form-control form-control-lg phone-input" placeholder="+91 98244 08739" pattern="^\+\d{1,4}[- .]?\d{6,14}$" title="Please enter phone number with country code starting with + (e.g. +91 98244 08739)." required>
+                                        <input type="tel" class="form-control form-control-lg phone-input" placeholder="+91 9874563214" pattern="^\+\d{1,4}\s\d{10}$" title="Please enter phone number in +91 9874563214 format (e.g. +91 9874563214)." required>
+                                        <div class="invalid-feedback">Please enter a valid 10-digit mobile number with country code (e.g. +91 9874563214).</div>
                                     </div>
 
                                     <div class="col-md-6">

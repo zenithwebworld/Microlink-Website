@@ -43,9 +43,9 @@ class Candidate_Form_Section_Widget extends WP_Widget {
                 } elseif (!is_email($email) || !preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $email)) {
                     $submission_status = 'danger';
                     $submission_msg    = 'Please enter a valid email address (e.g. name@example.com).';
-                } elseif (!preg_match('/^\+\d{1,4}[- .]?\d{6,14}$/', $phone)) {
+                } elseif (!preg_match('/^\+\d{1,4}\s\d{10}$/', $phone)) {
                     $submission_status = 'danger';
-                    $submission_msg    = 'Please enter a valid phone number with country code starting with + (e.g. +91 98244 08739).';
+                    $submission_msg    = 'Please enter a valid phone number in +91 9874563214 format.';
                 } elseif (!empty($full_name) && !empty($email) && !empty($phone)) {
                     $to      = $recipient;
                     $subject = 'New Job Application: ' . $full_name . ' - ' . ($app_title ?: 'Candidate');
@@ -146,11 +146,13 @@ class Candidate_Form_Section_Widget extends WP_Widget {
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold text-dark">Email Address *</label>
                                         <input type="email" name="email" class="form-control form-control-lg" placeholder="your@email.com" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email address (e.g. user@domain.com)." required>
+                                        <div class="invalid-feedback">Please enter a valid email address (e.g. name@example.com).</div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold text-dark">Phone Number (with Country Code) *</label>
-                                        <input type="tel" name="phone" class="form-control form-control-lg phone-input" placeholder="+91 98244 08739" pattern="^\+\d{1,4}[- .]?\d{6,14}$" title="Please enter phone number with country code starting with + (e.g. +91 98244 08739)." required>
+                                        <input type="tel" name="phone" class="form-control form-control-lg phone-input" placeholder="+91 9874563214" pattern="^\+\d{1,4}\s\d{10}$" title="Please enter phone number in +91 9874563214 format (e.g. +91 9874563214)." required>
+                                        <div class="invalid-feedback">Please enter a valid 10-digit mobile number with country code (e.g. +91 9874563214).</div>
                                     </div>
 
                                     <div class="col-md-6">
