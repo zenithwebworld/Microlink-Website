@@ -1763,14 +1763,15 @@ body img {
     font-weight: 700;
     font-size: 1.2rem;
     transition: all 0.2s ease-in-out;
-    padding-bottom: 4px;
-    border-bottom: none !important;
+    padding-bottom: 6px;
+    border-bottom: #8e909f dashed 1px !important;
+    display: block;
   }
   .header-section .menu ul .option-1>li p {
-    margin-top: 6px;
+    margin-top: 8px;
     margin-bottom: 0;
-    padding-bottom: 12px;
-    border-bottom: #8e909f dashed 1px !important;
+    padding-bottom: 0;
+    border-bottom: none !important;
   }
 
   .header-section .menu ul .option-1>li a .o1-01 {
