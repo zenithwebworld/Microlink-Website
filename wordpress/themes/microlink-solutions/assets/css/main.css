@@ -1532,14 +1532,17 @@ body img {
     max-height: calc(100vh - 110px);
     overflow-y: auto;
   }
-  .mega-menu-wrap .left-part{
+  .mega-menu-wrap .left-part,
+  .option-1-wrap .left-part {
     width: 22%;
     text-wrap: wrap;
     background: #0b285e;
     padding: 25px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    flex-direction: column !important;
     flex-shrink: 0;
   }
   .header-section .menu ul .mega-menu{
@@ -1559,11 +1562,14 @@ body img {
     margin-bottom: 12px;
     border-bottom: #8e909f dashed 1px;
     padding-bottom: 12px;
+    text-align: left !important;
+    width: 100%;
   }
   .mega-menu-wrap .left-part .cms p{
     color: white;
     font-size: 15px;
     line-height: 1.4;
+    text-align: left !important;
   }
 
   .header-section .menu ul .mega-menu .mm_title {
@@ -1748,8 +1754,8 @@ body img {
     display: flex;
     flex-direction: column;
     width: 100%;
-    border-bottom: #8e909f dashed 1px;
-    padding: 0px 0 20px;
+    padding: 0px 0 15px;
+    margin-bottom: 5px;
   }
   .header-section .menu ul .option-1>li a{
     padding: 0px;
@@ -1757,7 +1763,14 @@ body img {
     font-weight: 700;
     font-size: 1.2rem;
     transition: all 0.2s ease-in-out;
-    padding-bottom: 10px;
+    padding-bottom: 4px;
+    border-bottom: none !important;
+  }
+  .header-section .menu ul .option-1>li p {
+    margin-top: 6px;
+    margin-bottom: 0;
+    padding-bottom: 12px;
+    border-bottom: #8e909f dashed 1px !important;
   }
 
   .header-section .menu ul .option-1>li a .o1-01 {
