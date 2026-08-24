@@ -1566,6 +1566,8 @@ body img {
     margin-bottom: 12px;
     border-bottom: #8e909f dashed 1px;
     padding-bottom: 12px;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     text-align: left !important;
     width: 100%;
   }
@@ -1574,6 +1576,8 @@ body img {
     color: white;
     font-size: 15px;
     line-height: 1.4;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     text-align: left !important;
   }
 
@@ -1594,7 +1598,7 @@ body img {
     color: #0b285e;
     font-size: 0.95rem;
     transition: all 0.2s ease-in-out;
-    padding-bottom: 6px;
+    padding: 0 0 6px 0 !important;
     font-family: var(--ff-one);
     text-decoration: none;
     text-align: left !important;
