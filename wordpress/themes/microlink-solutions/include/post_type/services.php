@@ -21,10 +21,11 @@ function create_service_cpt() {
         'label'          => __('Services', _THEME_DOMAIN),
         'labels'         => $labels,
         'public'         => true,
+        'hierarchical'   => true,
         'menu_icon'      => 'dashicons-admin-tools',
-        'supports'       => array('title', 'editor', 'thumbnail'),
+        'supports'       => array('title', 'editor', 'thumbnail', 'page-attributes'),
         'has_archive'    => true,
-        'rewrite'        => array('slug' => 'services'),
+        'rewrite'        => array('slug' => 'services', 'with_front' => false, 'hierarchical' => true),
         'show_in_rest'   => true,
     );
 
@@ -32,12 +33,41 @@ function create_service_cpt() {
 }
 add_action('init', 'create_service_cpt');
 
+// Filter permalink for service post type to automatically include post parent hierarchy in URLs
+function custom_service_post_type_link($post_link, $post) {
+    if ($post->post_type === 'service') {
+        if ($post->post_parent) {
+            $ancestors = get_post_ancestors($post->ID);
+            $ancestors = array_reverse($ancestors);
+            $slugs = array();
+            foreach ($ancestors as $ancestor_id) {
+                $ancestor = get_post($ancestor_id);
+                if ($ancestor) {
+                    $slugs[] = $ancestor->post_name;
+                }
+            }
+            $slugs[] = $post->post_name;
+            return home_url('/services/' . implode('/', $slugs) . '/');
+        } else {
+            return home_url('/services/' . $post->post_name . '/');
+        }
+    }
+    return $post_link;
+}
+add_filter('post_type_link', 'custom_service_post_type_link', 10, 2);
+
+// Add custom rewrite rules to handle nested parent/child service URLs properly
+function custom_service_rewrite_rules() {
+    add_rewrite_rule('^services/(.+?)/?$', 'index.php?service=$matches[1]', 'top');
+}
+add_action('init', 'custom_service_rewrite_rules');
+
 // Register Custom Taxonomy
 function create_service_taxonomy() {
     register_taxonomy('service_category', 'service', array(
         'label'        => __('Service Categories', _THEME_DOMAIN),
         'hierarchical' => true,
-        'rewrite'      => array('slug' => 'service-category'),
+        'rewrite'      => array('slug' => 'service-category', 'hierarchical' => true),
         'show_in_rest' => true,
     ));
 }

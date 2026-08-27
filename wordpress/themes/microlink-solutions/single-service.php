@@ -35,6 +35,16 @@ $banner        = !empty($banner) ? $banner : get_template_directory_uri() . '/as
                             <a href="<?php echo esc_url(home_url('/')); ?>" class="text-white" title="Home">Home</a>
                             <span class="text-white mx-2">-</span>
                             <a href="<?php echo esc_url(home_url('/services')); ?>" class="text-white" title="Services">Services</a>
+                            <?php
+                            $parents = get_post_ancestors($post_id);
+                            if (!empty($parents)) {
+                                $parents = array_reverse($parents);
+                                foreach ($parents as $parent_item_id) {
+                                    echo '<span class="text-white mx-2">-</span>';
+                                    echo '<a href="' . esc_url(get_permalink($parent_item_id)) . '" class="text-white">' . esc_html(get_the_title($parent_item_id)) . '</a>';
+                                }
+                            }
+                            ?>
                             <span class="text-white mx-2">-</span>
                             <span class="text-white"><?php echo esc_html($title); ?></span>
                         </div>
@@ -64,13 +74,37 @@ $banner        = !empty($banner) ? $banner : get_template_directory_uri() . '/as
                         <h4 class="mb-4 text-primary fw-bold">Related Services</h4>
 
                         <?php
-                        $related = new WP_Query([
+                        $parent_id = wp_get_post_parent_id($post_id);
+                        
+                        // Query child services if current post is a parent
+                        $related_args = [
                             'post_type'      => 'service',
-                            'posts_per_page' => 6,
+                            'posts_per_page' => -1,
                             'post__not_in'   => [$post_id],
+                            'post_parent'    => $post_id,
                             'orderby'        => 'menu_order title',
                             'order'          => 'ASC'
-                        ]);
+                        ];
+                        
+                        $related = new WP_Query($related_args);
+
+                        // If current post has no children (is a sub-category page) but has a parent, fetch sibling services
+                        if (!$related->have_posts() && $parent_id) {
+                            $related_args['post_parent'] = $parent_id;
+                            $related = new WP_Query($related_args);
+                        }
+
+                        // Fallback: If no child/sibling services exist, fetch top-level primary services
+                        if (!$related->have_posts()) {
+                            $related = new WP_Query([
+                                'post_type'      => 'service',
+                                'posts_per_page' => 6,
+                                'post__not_in'   => [$post_id],
+                                'post_parent'    => 0,
+                                'orderby'        => 'menu_order title',
+                                'order'          => 'ASC'
+                            ]);
+                        }
 
                         if ($related->have_posts()) :
                             while ($related->have_posts()) : $related->the_post();
