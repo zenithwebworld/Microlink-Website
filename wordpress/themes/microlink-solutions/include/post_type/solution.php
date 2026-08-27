@@ -21,10 +21,11 @@ function create_solution_cpt() {
         'label'          => __('Solution', _THEME_DOMAIN),
         'labels'         => $labels,
         'public'         => true,
+        'hierarchical'   => true,
         'menu_icon'      => 'dashicons-admin-generic',
-        'supports'       => array('title', 'editor', 'thumbnail'),
+        'supports'       => array('title', 'editor', 'thumbnail', 'page-attributes'),
         'has_archive'    => true,
-        'rewrite'        => array('slug' => 'solutions'),
+        'rewrite'        => array('slug' => 'solutions', 'with_front' => false, 'hierarchical' => true),
         'show_in_rest'   => true,
     );
 
@@ -32,13 +33,42 @@ function create_solution_cpt() {
 }
 add_action('init', 'create_solution_cpt');
 
+// Filter permalink for solution post type to automatically include post parent hierarchy in URLs
+function custom_solution_post_type_link($post_link, $post) {
+    if ($post->post_type === 'solution') {
+        if ($post->post_parent) {
+            $ancestors = get_post_ancestors($post->ID);
+            $ancestors = array_reverse($ancestors);
+            $slugs = array();
+            foreach ($ancestors as $ancestor_id) {
+                $ancestor = get_post($ancestor_id);
+                if ($ancestor) {
+                    $slugs[] = $ancestor->post_name;
+                }
+            }
+            $slugs[] = $post->post_name;
+            return home_url('/solutions/' . implode('/', $slugs) . '/');
+        } else {
+            return home_url('/solutions/' . $post->post_name . '/');
+        }
+    }
+    return $post_link;
+}
+add_filter('post_type_link', 'custom_solution_post_type_link', 10, 2);
+
+// Add custom rewrite rules to handle nested parent/child solution URLs properly
+function custom_solution_rewrite_rules() {
+    add_rewrite_rule('^solutions/(.+?)/?$', 'index.php?solution=$matches[1]', 'top');
+}
+add_action('init', 'custom_solution_rewrite_rules');
+
 // Register Custom Taxonomy
 function create_solution_taxonomy() {
 
     register_taxonomy('solution_category', 'solution', array(
         'label'        => __('Solution Categories', _THEME_DOMAIN),
         'hierarchical' => true,
-        'rewrite'      => array('slug' => 'solution-category'),
+        'rewrite'      => array('slug' => 'solution-category', 'hierarchical' => true),
         'show_in_rest' => true,
     ));
 }
