@@ -48,9 +48,6 @@ add_action('wp_mail_failed', 'microlink_capture_mail_failure');
 // Ensure WordPress core From and From Name match SMTP settings
 function microlink_filter_wp_mail_from($default_from) {
     $from_email = get_option('microlink_smtp_from_email');
-    if ($from_email === 'pnaresh776@gmail.com') {
-        $from_email = 'info@microlink.co.in';
-    }
     return (!empty($from_email) && is_email($from_email)) ? $from_email : $default_from;
 }
 add_filter('wp_mail_from', 'microlink_filter_wp_mail_from');
@@ -127,14 +124,8 @@ function microlink_render_smtp_settings_page() {
     $username   = get_option('microlink_smtp_username', '');
     $password   = get_option('microlink_smtp_password', '');
     $from_email = get_option('microlink_smtp_from_email', 'info@microlink.co.in');
-    if ($from_email === 'pnaresh776@gmail.com') {
-        $from_email = 'info@microlink.co.in';
-    }
     $from_name  = get_option('microlink_smtp_from_name', get_bloginfo('name'));
     $admin_notify_email = get_option('microlink_admin_notification_email', 'info@microlink.co.in');
-    if ($admin_notify_email === 'pnaresh776@gmail.com') {
-        $admin_notify_email = 'info@microlink.co.in';
-    }
 
     $last_error = get_option('microlink_last_mail_error');
     ?>
@@ -274,10 +265,7 @@ function microlink_configure_phpmailer($phpmailer) {
     $encryption = get_option('microlink_smtp_encryption');
     $username   = get_option('microlink_smtp_username');
     $password   = get_option('microlink_smtp_password');
-    $from_email = get_option('microlink_smtp_from_email');
-    if ($from_email === 'pnaresh776@gmail.com') {
-        $from_email = 'info@microlink.co.in';
-    }
+    $from_email = get_option('microlink_smtp_from_email', 'info@microlink.co.in');
     $from_name  = get_option('microlink_smtp_from_name');
 
     if (!empty($host)) {

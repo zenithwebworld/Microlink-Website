@@ -140,16 +140,10 @@ function microlink_handle_resend_submission_emails() {
         if (empty($admin_recipients)) {
             $admin_recipients = get_option('microlink_smtp_from_email', get_option('admin_email')) ?: 'info@microlink.co.in';
         }
-        if ($admin_recipients === 'pnaresh776@gmail.com') {
-            $admin_recipients = 'info@microlink.co.in';
-        }
 
         $from_email = get_option('microlink_smtp_from_email', 'info@microlink.co.in');
-        if ($from_email === 'pnaresh776@gmail.com') {
-            $from_email = 'info@microlink.co.in';
-        }
-        $from_name = get_option('microlink_smtp_from_name', get_bloginfo('name'));
-        $site_name = get_bloginfo('name');
+        $from_name  = get_option('microlink_smtp_from_name', get_bloginfo('name'));
+        $site_name  = get_bloginfo('name');
 
         $email_fields = array(
             'Sender Name'  => $name,
