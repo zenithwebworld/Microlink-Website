@@ -5274,3 +5274,68 @@ body img {
   z-index: 2;
   background-color: #ffffff;
 }
+
+/* ==========================================================================
+   Contact Form & CF7 Loader Inline Alignment Fix
+   ========================================================================== */
+.wpcf7 form .wpcf7-submit,
+.wpcf7 input[type="submit"],
+.wpcf7 button[type="submit"],
+.contact-form-card .btn-primary,
+.contact-form-card input[type="submit"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  margin-bottom: 0 !important;
+}
+
+/* Ensure paragraph or wrapper containing submit button keeps button and spinner inline */
+.wpcf7-form p:has(.wpcf7-submit),
+.wpcf7-form p:has(input[type="submit"]),
+.wpcf7-form .wpcf7-submit-wrapper,
+.wpcf7-submit-wrapper,
+.contact-form-card .wpcf7 form p:last-child,
+.contact-form-card .wpcf7 form p:last-of-type {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-bottom: 0 !important;
+}
+
+/* CF7 Spinner strict inline positioning beside button */
+.wpcf7 .wpcf7-spinner,
+.wpcf7-spinner,
+span.wpcf7-spinner {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin: 0 0 0 12px !important;
+  float: none !important;
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.wpcf7 form:not(.submitting) .wpcf7-spinner {
+  display: none !important;
+}
+
+.wpcf7 form.submitting .wpcf7-spinner {
+  display: inline-block !important;
+  visibility: visible !important;
+}
+
+/* Custom Contact Form inline loader */
+#microlink-custom-contact-form .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+#microlink-custom-contact-form .custom-form-spinner {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}

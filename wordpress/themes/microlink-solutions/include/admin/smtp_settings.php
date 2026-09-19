@@ -45,6 +45,23 @@ function microlink_capture_mail_failure($wp_error) {
 }
 add_action('wp_mail_failed', 'microlink_capture_mail_failure');
 
+// Helper to retrieve the latest mail error message
+function microlink_get_last_mail_error() {
+    global $phpmailer;
+    $err = '';
+    if (!empty($phpmailer) && !empty($phpmailer->ErrorInfo)) {
+        $err = trim($phpmailer->ErrorInfo);
+    }
+    if (empty($err)) {
+        $last_err = get_option('microlink_last_mail_error');
+        if (!empty($last_err['message'])) {
+            $err = trim($last_err['message']);
+        }
+    }
+    return !empty($err) ? $err : __('Mail delivery error (SMTP connection or rejection)', _THEME_DOMAIN);
+}
+
+
 // Ensure WordPress core From and From Name match SMTP settings
 function microlink_filter_wp_mail_from($default_from) {
     $from_email = get_option('microlink_smtp_from_email');

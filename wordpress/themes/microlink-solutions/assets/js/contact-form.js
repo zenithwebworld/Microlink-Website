@@ -5,9 +5,21 @@ jQuery(document).ready(function($) {
         var $form = $(this);
         var $btn = $form.find('button[type="submit"]');
         var $alert = $('#contact-form-response');
+        var $btnSpinner = $btn.find('.btn-spinner');
+        var $inlineSpinner = $form.find('.custom-form-spinner');
         var originalBtnText = $btn.html();
 
-        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Sending...');
+        $btn.prop('disabled', true);
+        if ($btnSpinner.length) {
+            $btnSpinner.show();
+        }
+        if ($inlineSpinner.length) {
+            $inlineSpinner.show();
+        }
+        if (!$btnSpinner.length && !$inlineSpinner.length) {
+            $btn.append(' <span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true"></span>');
+        }
+
         $alert.hide().removeClass('alert-success alert-danger');
 
         var formData = {
@@ -30,7 +42,16 @@ jQuery(document).ready(function($) {
         }).fail(function() {
             $alert.addClass('alert alert-danger').html('Server error. Please try again later.').fadeIn();
         }).always(function() {
-            $btn.prop('disabled', false).html(originalBtnText);
+            $btn.prop('disabled', false);
+            if ($btnSpinner.length) {
+                $btnSpinner.hide();
+            }
+            if ($inlineSpinner.length) {
+                $inlineSpinner.hide();
+            }
+            if (!$btnSpinner.length && !$inlineSpinner.length) {
+                $btn.html(originalBtnText);
+            }
         });
     });
 });

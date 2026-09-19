@@ -113,8 +113,14 @@ class Contact_Us_Section_Widget extends WP_Widget {
                                                 <label class="form-label font-weight-bold">Message *</label>
                                                 <textarea name="message" class="form-control form-control-lg" rows="4" placeholder="Write your message here..." required></textarea>
                                             </div>
-                                            <div class="col-12 mt-3">
-                                                <button type="submit" class="btn btn-primary btn-lg px-4">Send Message</button>
+                                            <div class="col-12 mt-3 d-flex align-items-center flex-wrap gap-3">
+                                                <button type="submit" class="btn btn-primary btn-lg px-4 d-inline-flex align-items-center justify-content-center">
+                                                    <span class="btn-text">Send Message</span>
+                                                    <span class="spinner-border spinner-border-sm ms-2 btn-spinner" role="status" aria-hidden="true" style="display:none;"></span>
+                                                </button>
+                                                <div class="custom-form-spinner" style="display:none;">
+                                                    <span class="spinner-border text-danger" style="width: 22px; height: 22px; border-width: 2.5px;" role="status"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
