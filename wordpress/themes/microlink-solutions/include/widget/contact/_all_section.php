@@ -87,8 +87,39 @@ class Contact_Us_Section_Widget extends WP_Widget {
                         <div class="contact-form-card c-card bg-white rounded-4 overflow-hidden h-100">
                             <div class="card-body p-5">
                                 <h3 class="fw-bold mb-1">Send us a Message</h3>
-                                <p class="text-muted mb-4">Fill out the form below and our team will get back to you.</p>
-                                <?php echo do_shortcode($cf7_code); ?>
+                                <?php if (!empty($cf7_code) && shortcode_exists('contact-form-7')) : ?>
+                                    <?php echo do_shortcode($cf7_code); ?>
+                                <?php else : ?>
+                                    <div id="contact-form-response" style="display:none;"></div>
+                                    <form id="microlink-custom-contact-form" method="post" class="needs-validation" novalidate>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label font-weight-bold">Full Name *</label>
+                                                <input type="text" name="name" class="form-control form-control-lg" placeholder="John Doe" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label font-weight-bold">Email Address *</label>
+                                                <input type="email" name="email" class="form-control form-control-lg" placeholder="name@company.com" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label font-weight-bold">Phone Number</label>
+                                                <input type="tel" name="phone" class="form-control form-control-lg" placeholder="+1 (555) 000-0000">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label font-weight-bold">Subject</label>
+                                                <input type="text" name="subject" class="form-control form-control-lg" placeholder="How can we help?">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label font-weight-bold">Message *</label>
+                                                <textarea name="message" class="form-control form-control-lg" rows="4" placeholder="Write your message here..." required></textarea>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <button type="submit" class="btn btn-primary btn-lg px-4">Send Message</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                <?php endif; ?>
+
                             </div>
                         </div>
                     </div>

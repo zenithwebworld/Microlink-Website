@@ -197,6 +197,10 @@ require get_template_directory() . '/include/post_type/jobs.php';
 require get_template_directory() . '/include/post_type/life.php';
 require get_template_directory() . '/include/post_type/awards.php';
 require get_template_directory() . '/include/post_type/case_studies.php';
+require get_template_directory() . '/include/post_type/contact_submissions.php';
+require get_template_directory() . '/include/admin/smtp_settings.php';
+require get_template_directory() . '/include/contact_form_handler.php';
+
 
 // Include widgets (Common)
 require get_template_directory() . '/include/widget/common/_page_header.php';
@@ -398,3 +402,52 @@ function microlink_solutions_customize_register($wp_customize) {
     ));
 }
 add_action('customize_register', 'microlink_solutions_customize_register');
+
+function custom_get_styled_email_template($title, $fields, $footer_text = '') {
+    ob_start();
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin:0; padding:0; background-color:#f4f6f9; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:#f4f6f9; padding: 40px 0;">
+            <tr>
+                <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" width="600" style="background:#ffffff; border-radius:12px; overflow:hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                        <!-- Header -->
+                        <tr>
+                            <td style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); padding: 30px; text-align: center;">
+                                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;"><?php echo esc_html($title); ?></h1>
+                            </td>
+                        </tr>
+                        <!-- Content -->
+                        <tr>
+                            <td style="padding: 30px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <?php foreach ($fields as $label => $value) : ?>
+                                        <tr>
+                                            <td style="padding: 10px 0; border-bottom: 1px solid #eef2f5; font-weight: 600; color: #495057; width: 35%;"><?php echo esc_html($label); ?></td>
+                                            <td style="padding: 10px 0; border-bottom: 1px solid #eef2f5; color: #212529;"><?php echo nl2br(esc_html($value)); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- Footer -->
+                        <tr>
+                            <td style="background-color: #f8f9fa; padding: 20px; text-align: center; color: #6c757d; font-size: 13px;">
+                                <?php echo !empty($footer_text) ? esc_html($footer_text) : 'Sent automatically from ' . esc_html(get_bloginfo('name')); ?>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    <?php
+    return ob_get_clean();
+}
