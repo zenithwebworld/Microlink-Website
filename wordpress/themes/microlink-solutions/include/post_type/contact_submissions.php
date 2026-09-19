@@ -37,8 +37,7 @@ function set_custom_contact_submission_columns($columns) {
         'email'         => __('Email', _THEME_DOMAIN),
         'phone'         => __('Phone', _THEME_DOMAIN),
         'subject'       => __('Subject', _THEME_DOMAIN),
-        'admin_status'  => __('Admin Notified', _THEME_DOMAIN),
-        'user_status'   => __('Auto-Reply', _THEME_DOMAIN),
+        'email_status'  => __('Email Status', _THEME_DOMAIN),
         'date'          => __('Date Received', _THEME_DOMAIN),
     );
     return $new_columns;
@@ -60,27 +59,39 @@ function custom_contact_submission_column_data($column, $post_id) {
             $subject = get_post_meta($post_id, '_submission_subject', true);
             echo !empty($subject) ? esc_html($subject) : '—';
             break;
-        case 'admin_status':
-            $status = get_post_meta($post_id, '_admin_email_status', true);
-            if ($status === 'Sent') {
-                echo '<span style="background:#d1e7dd; color:#0f5132; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:600;">✓ Sent</span>';
-            } elseif ($status === 'Failed') {
-                $err = get_post_meta($post_id, '_admin_email_error', true);
-                echo '<span style="background:#f8d7da; color:#842029; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:600;" title="' . esc_attr($err) . '">✗ Failed</span>';
+        case 'email_status':
+            $admin_status = get_post_meta($post_id, '_admin_email_status', true);
+            $admin_err    = get_post_meta($post_id, '_admin_email_error', true);
+            $user_status  = get_post_meta($post_id, '_user_email_status', true);
+            $user_err     = get_post_meta($post_id, '_user_email_error', true);
+
+            echo '<div style="display:flex; flex-direction:column; gap:4px; font-size:12px; min-width:140px;">';
+
+            // Admin Status Badge
+            echo '<div style="display:flex; align-items:center; gap:6px;">';
+            echo '<strong style="color:#555; width:45px;">Admin:</strong>';
+            if ($admin_status === 'Sent') {
+                echo '<span style="background:#d1e7dd; color:#0f5132; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;">✓ Sent</span>';
+            } elseif ($admin_status === 'Failed') {
+                echo '<span style="background:#f8d7da; color:#842029; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="' . esc_attr($admin_err) . '">✗ Not Sent</span>';
             } else {
-                echo '<span style="background:#e2e3e5; color:#41464b; padding:3px 8px; border-radius:12px; font-size:12px;">Logged</span>';
+                echo '<span style="background:#fff3cd; color:#664d03; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="No delivery record found">✗ Not Sent</span>';
             }
-            break;
-        case 'user_status':
-            $status = get_post_meta($post_id, '_user_email_status', true);
-            if ($status === 'Sent') {
-                echo '<span style="background:#d1e7dd; color:#0f5132; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:600;">✓ Sent</span>';
-            } elseif ($status === 'Failed') {
-                $err = get_post_meta($post_id, '_user_email_error', true);
-                echo '<span style="background:#f8d7da; color:#842029; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:600;" title="' . esc_attr($err) . '">✗ Failed</span>';
+            echo '</div>';
+
+            // User Auto-Reply Status Badge
+            echo '<div style="display:flex; align-items:center; gap:6px;">';
+            echo '<strong style="color:#555; width:45px;">User:</strong>';
+            if ($user_status === 'Sent') {
+                echo '<span style="background:#d1e7dd; color:#0f5132; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;">✓ Sent</span>';
+            } elseif ($user_status === 'Failed') {
+                echo '<span style="background:#f8d7da; color:#842029; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="' . esc_attr($user_err) . '">✗ Not Sent</span>';
             } else {
-                echo '<span style="background:#e2e3e5; color:#41464b; padding:3px 8px; border-radius:12px; font-size:12px;">Logged</span>';
+                echo '<span style="background:#fff3cd; color:#664d03; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="No delivery record found">✗ Not Sent</span>';
             }
+            echo '</div>';
+
+            echo '</div>';
             break;
     }
 }
@@ -93,6 +104,132 @@ function set_contact_submission_sortable_columns($columns) {
     return $columns;
 }
 add_filter('manage_edit-contact_submission_sortable_columns', 'set_contact_submission_sortable_columns');
+
+// Add "Resend Emails" action link in row actions
+function microlink_contact_submission_row_actions($actions, $post) {
+    if ($post->post_type === 'contact_submission') {
+        unset($actions['inline hide-if-no-js']); // Remove quick edit
+        $resend_url = wp_nonce_url(
+            admin_url('admin-post.php?action=microlink_resend_submission_emails&post_id=' . $post->ID),
+            'microlink_resend_email_' . $post->ID
+        );
+        $actions['resend_email'] = '<a href="' . esc_url($resend_url) . '" style="color:#0d6efd; font-weight:600;"><span class="dashicons dashicons-email-alt" style="font-size:14px; vertical-align:middle; width:14px; height:14px;"></span> ' . __('Resend Emails', _THEME_DOMAIN) . '</a>';
+    }
+    return $actions;
+}
+add_filter('post_row_actions', 'microlink_contact_submission_row_actions', 10, 2);
+
+// Handle Resend Emails action
+function microlink_handle_resend_submission_emails() {
+    if (!current_user_can('manage_options')) {
+        wp_die(__('Unauthorized action', _THEME_DOMAIN));
+    }
+    $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
+    check_admin_referer('microlink_resend_email_' . $post_id);
+
+    if ($post_id > 0) {
+        $name    = get_post_meta($post_id, '_submission_name', true) ?: get_the_title($post_id);
+        $email   = get_post_meta($post_id, '_submission_email', true);
+        $phone   = get_post_meta($post_id, '_submission_phone', true);
+        $subject = get_post_meta($post_id, '_submission_subject', true) ?: 'Contact Inquiry';
+        $message = get_post_meta($post_id, '_submission_message', true);
+        $ip      = get_post_meta($post_id, '_submission_ip', true) ?: 'Unknown';
+
+        // 1. Resend Admin email
+        $admin_recipients = get_option('microlink_admin_notification_email');
+        if (empty($admin_recipients)) {
+            $admin_recipients = get_option('microlink_smtp_from_email', get_option('admin_email')) ?: 'info@microlink.co.in';
+        }
+        if ($admin_recipients === 'pnaresh776@gmail.com') {
+            $admin_recipients = 'info@microlink.co.in';
+        }
+
+        $from_email = get_option('microlink_smtp_from_email', 'info@microlink.co.in');
+        if ($from_email === 'pnaresh776@gmail.com') {
+            $from_email = 'info@microlink.co.in';
+        }
+        $from_name = get_option('microlink_smtp_from_name', get_bloginfo('name'));
+        $site_name = get_bloginfo('name');
+
+        $email_fields = array(
+            'Sender Name'  => $name,
+            'Email'        => $email,
+            'Phone'        => !empty($phone) ? $phone : 'Not provided',
+            'Subject'      => $subject,
+            'Submitted On' => get_the_date('F j, Y g:i a', $post_id),
+            'IP Address'   => $ip,
+            'Message'      => $message,
+        );
+        $admin_content = custom_get_styled_email_template('New Contact Inquiry Received', $email_fields, 'Notification sent from ' . $site_name);
+        $admin_headers = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: ' . $from_name . ' <' . $from_email . '>',
+            'Reply-To: ' . $name . ' <' . $email . '>',
+        );
+        $admin_emails = array_filter(array_map('trim', explode(',', $admin_recipients)));
+        if (empty($admin_emails)) {
+            $admin_emails = array('info@microlink.co.in');
+        }
+        $admin_sent = wp_mail($admin_emails, 'New Contact Inquiry: ' . $subject, $admin_content, $admin_headers);
+        update_post_meta($post_id, '_admin_email_status', $admin_sent ? 'Sent' : 'Failed');
+        if (!$admin_sent) {
+            $last_err = get_option('microlink_last_mail_error');
+            update_post_meta($post_id, '_admin_email_error', is_array($last_err) ? ($last_err['message'] ?? 'wp_mail returned false') : 'wp_mail returned false');
+        } else {
+            delete_post_meta($post_id, '_admin_email_error');
+        }
+
+        // 2. Resend User confirmation email
+        $user_sent = false;
+        if (!empty($email) && is_email($email)) {
+            $user_fields = array(
+                'Dear'            => $name,
+                'Status'          => 'We have received your message and our team will get back to you shortly.',
+                'Your Subject'    => $subject,
+                'Reference ID'    => '#' . $post_id,
+            );
+            $user_content = custom_get_styled_email_template('Thank You for Contacting Us', $user_fields, 'Thank you for reaching out to ' . $site_name);
+            $user_headers = array(
+                'Content-Type: text/html; charset=UTF-8',
+                'From: ' . $from_name . ' <' . $from_email . '>',
+            );
+            $user_sent = wp_mail($email, 'Thank you for reaching out to ' . $site_name, $user_content, $user_headers);
+            update_post_meta($post_id, '_user_email_status', $user_sent ? 'Sent' : 'Failed');
+            if (!$user_sent) {
+                $last_err = get_option('microlink_last_mail_error');
+                update_post_meta($post_id, '_user_email_error', is_array($last_err) ? ($last_err['message'] ?? 'wp_mail returned false') : 'wp_mail returned false');
+            } else {
+                delete_post_meta($post_id, '_user_email_error');
+            }
+        }
+
+        $redirect = add_query_arg(array(
+            'post_type'       => 'contact_submission',
+            'resend_result'   => ($admin_sent && $user_sent) ? 'success' : 'failed',
+            'admin_status'    => $admin_sent ? 'sent' : 'failed',
+            'user_status'     => $user_sent ? 'sent' : 'failed',
+        ), admin_url('edit.php'));
+        wp_safe_redirect($redirect);
+        exit;
+    }
+}
+add_action('admin_post_microlink_resend_submission_emails', 'microlink_handle_resend_submission_emails');
+
+// Resend Admin Notice
+function microlink_submission_resend_admin_notice() {
+    if (isset($_GET['resend_result']) && isset($_GET['post_type']) && $_GET['post_type'] === 'contact_submission') {
+        $admin_ok = (isset($_GET['admin_status']) && $_GET['admin_status'] === 'sent');
+        $user_ok  = (isset($_GET['user_status']) && $_GET['user_status'] === 'sent');
+        if ($admin_ok && $user_ok) {
+            echo '<div class="notice notice-success is-dismissible"><p><strong>Success!</strong> Both Admin Notification and User Auto-Reply emails were resent successfully.</p></div>';
+        } else {
+            $last_err = get_option('microlink_last_mail_error');
+            $msg = is_array($last_err) ? ($last_err['message'] ?? '') : '';
+            echo '<div class="notice notice-warning is-dismissible"><p><strong>Email Resend Notice:</strong> Admin Email: <strong>' . ($admin_ok ? 'Sent' : 'Failed') . '</strong> | User Auto-Reply: <strong>' . ($user_ok ? 'Sent' : 'Failed') . '</strong>' . ($msg ? ' &mdash; <em>' . esc_html($msg) . '</em>' : '') . '</p></div>';
+        }
+    }
+}
+add_action('admin_notices', 'microlink_submission_resend_admin_notice');
 
 // Add Submission Meta Box Details View
 function add_contact_submission_meta_box() {
@@ -119,6 +256,11 @@ function render_contact_submission_meta_box($post) {
     $admin_err    = get_post_meta($post->ID, '_admin_email_error', true);
     $user_status  = get_post_meta($post->ID, '_user_email_status', true);
     $user_err     = get_post_meta($post->ID, '_user_email_error', true);
+
+    $resend_url = wp_nonce_url(
+        admin_url('admin-post.php?action=microlink_resend_submission_emails&post_id=' . $post->ID),
+        'microlink_resend_email_' . $post->ID
+    );
     ?>
     <style>
         .submission-detail-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -126,6 +268,11 @@ function render_contact_submission_meta_box($post) {
         .submission-detail-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
         .submission-message-box { background: #fdfdfd; border: 1px solid #e2e8f0; padding: 15px; border-radius: 6px; white-space: pre-wrap; line-height: 1.6; }
     </style>
+    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
+        <a href="<?php echo esc_url($resend_url); ?>" class="button button-secondary">
+            <span class="dashicons dashicons-email-alt" style="vertical-align: text-bottom;"></span> <?php _e('Resend Notification & Auto-Reply', _THEME_DOMAIN); ?>
+        </a>
+    </div>
     <table class="submission-detail-table">
         <tr>
             <th><?php _e('Full Name', _THEME_DOMAIN); ?></th>
@@ -149,12 +296,12 @@ function render_contact_submission_meta_box($post) {
                 <?php if ($admin_status === 'Sent'): ?>
                     <span style="color:#0f5132; font-weight:600;">✓ Successfully Sent to Admin</span>
                 <?php elseif ($admin_status === 'Failed'): ?>
-                    <span style="color:#842029; font-weight:600;">✗ Failed to Send</span>
+                    <span style="color:#842029; font-weight:600;">✗ Failed / Not Sent</span>
                     <?php if (!empty($admin_err)): ?>
                         <div style="color:#842029; font-size:12px; margin-top:4px;">Reason: <code><?php echo esc_html($admin_err); ?></code></div>
                     <?php endif; ?>
                 <?php else: ?>
-                    <span style="color:#6c757d;">Logged in database</span>
+                    <span style="color:#856404; background:#fff3cd; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:600;">✗ Not Sent (No record)</span>
                 <?php endif; ?>
             </td>
         </tr>
@@ -164,12 +311,12 @@ function render_contact_submission_meta_box($post) {
                 <?php if ($user_status === 'Sent'): ?>
                     <span style="color:#0f5132; font-weight:600;">✓ Successfully Sent to Sender (<?php echo esc_html($email); ?>)</span>
                 <?php elseif ($user_status === 'Failed'): ?>
-                    <span style="color:#842029; font-weight:600;">✗ Failed to Send</span>
+                    <span style="color:#842029; font-weight:600;">✗ Failed / Not Sent</span>
                     <?php if (!empty($user_err)): ?>
                         <div style="color:#842029; font-size:12px; margin-top:4px;">Reason: <code><?php echo esc_html($user_err); ?></code></div>
                     <?php endif; ?>
                 <?php else: ?>
-                    <span style="color:#6c757d;">Logged in database</span>
+                    <span style="color:#856404; background:#fff3cd; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:600;">✗ Not Sent (No record)</span>
                 <?php endif; ?>
             </td>
         </tr>
