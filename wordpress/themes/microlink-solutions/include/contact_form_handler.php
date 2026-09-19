@@ -94,11 +94,16 @@ function microlink_handle_contact_submission() {
         $admin_emails = array('info@microlink.co.in');
     }
 
+    $error_entries = array();
+
     $admin_sent = wp_mail($admin_emails, 'New Contact Inquiry: ' . $subject, $admin_email_content, $admin_headers);
     update_post_meta($post_id, '_admin_email_status', $admin_sent ? 'Sent' : 'Failed');
     if (!$admin_sent) {
-        $last_err = get_option('microlink_last_mail_error');
-        update_post_meta($post_id, '_admin_email_error', is_array($last_err) ? ($last_err['message'] ?? 'wp_mail returned false') : 'wp_mail returned false');
+        $admin_err = function_exists('microlink_get_last_mail_error') ? microlink_get_last_mail_error() : 'Admin email send failed';
+        update_post_meta($post_id, '_admin_email_error', $admin_err);
+        $error_entries[] = 'Admin: ' . $admin_err;
+    } else {
+        delete_post_meta($post_id, '_admin_email_error');
     }
 
     // 3. Send Styled Confirmation Email to User
@@ -117,8 +122,17 @@ function microlink_handle_contact_submission() {
     $user_sent = wp_mail($email, 'Thank you for reaching out to ' . $site_name, $user_email_content, $user_headers);
     update_post_meta($post_id, '_user_email_status', $user_sent ? 'Sent' : 'Failed');
     if (!$user_sent) {
-        $last_err = get_option('microlink_last_mail_error');
-        update_post_meta($post_id, '_user_email_error', is_array($last_err) ? ($last_err['message'] ?? 'wp_mail returned false') : 'wp_mail returned false');
+        $user_err = function_exists('microlink_get_last_mail_error') ? microlink_get_last_mail_error() : 'User auto-reply failed';
+        update_post_meta($post_id, '_user_email_error', $user_err);
+        $error_entries[] = 'User: ' . $user_err;
+    } else {
+        delete_post_meta($post_id, '_user_email_error');
+    }
+
+    if (!empty($error_entries)) {
+        update_post_meta($post_id, '_email_error_log', implode(' | ', $error_entries));
+    } else {
+        delete_post_meta($post_id, '_email_error_log');
     }
 
     wp_send_json_success(array('message' => __('Thank you! Your message has been sent successfully.', _THEME_DOMAIN)));
