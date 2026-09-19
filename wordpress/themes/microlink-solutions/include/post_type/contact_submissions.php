@@ -32,12 +32,14 @@ add_action('init', 'register_contact_submissions_cpt');
 // Add Custom Columns to Admin List Table
 function set_custom_contact_submission_columns($columns) {
     $new_columns = array(
-        'cb'        => $columns['cb'],
-        'title'     => __('Name', _THEME_DOMAIN),
-        'email'     => __('Email', _THEME_DOMAIN),
-        'phone'     => __('Phone', _THEME_DOMAIN),
-        'subject'   => __('Subject', _THEME_DOMAIN),
-        'date'      => __('Date Received', _THEME_DOMAIN),
+        'cb'            => $columns['cb'],
+        'title'         => __('Name', _THEME_DOMAIN),
+        'email'         => __('Email', _THEME_DOMAIN),
+        'phone'         => __('Phone', _THEME_DOMAIN),
+        'subject'       => __('Subject', _THEME_DOMAIN),
+        'admin_status'  => __('Admin Notified', _THEME_DOMAIN),
+        'user_status'   => __('Auto-Reply', _THEME_DOMAIN),
+        'date'          => __('Date Received', _THEME_DOMAIN),
     );
     return $new_columns;
 }
@@ -57,6 +59,28 @@ function custom_contact_submission_column_data($column, $post_id) {
         case 'subject':
             $subject = get_post_meta($post_id, '_submission_subject', true);
             echo !empty($subject) ? esc_html($subject) : '—';
+            break;
+        case 'admin_status':
+            $status = get_post_meta($post_id, '_admin_email_status', true);
+            if ($status === 'Sent') {
+                echo '<span style="background:#d1e7dd; color:#0f5132; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:600;">✓ Sent</span>';
+            } elseif ($status === 'Failed') {
+                $err = get_post_meta($post_id, '_admin_email_error', true);
+                echo '<span style="background:#f8d7da; color:#842029; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:600;" title="' . esc_attr($err) . '">✗ Failed</span>';
+            } else {
+                echo '<span style="background:#e2e3e5; color:#41464b; padding:3px 8px; border-radius:12px; font-size:12px;">Logged</span>';
+            }
+            break;
+        case 'user_status':
+            $status = get_post_meta($post_id, '_user_email_status', true);
+            if ($status === 'Sent') {
+                echo '<span style="background:#d1e7dd; color:#0f5132; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:600;">✓ Sent</span>';
+            } elseif ($status === 'Failed') {
+                $err = get_post_meta($post_id, '_user_email_error', true);
+                echo '<span style="background:#f8d7da; color:#842029; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:600;" title="' . esc_attr($err) . '">✗ Failed</span>';
+            } else {
+                echo '<span style="background:#e2e3e5; color:#41464b; padding:3px 8px; border-radius:12px; font-size:12px;">Logged</span>';
+            }
             break;
     }
 }
@@ -84,17 +108,21 @@ function add_contact_submission_meta_box() {
 add_action('add_meta_boxes', 'add_contact_submission_meta_box');
 
 function render_contact_submission_meta_box($post) {
-    $name    = get_post_meta($post->ID, '_submission_name', true) ?: $post->post_title;
-    $email   = get_post_meta($post->ID, '_submission_email', true);
-    $phone   = get_post_meta($post->ID, '_submission_phone', true);
-    $subject = get_post_meta($post->ID, '_submission_subject', true);
-    $message = get_post_meta($post->ID, '_submission_message', true);
-    $ip      = get_post_meta($post->ID, '_submission_ip', true);
-    $date    = get_the_date('F j, Y g:i a', $post);
+    $name         = get_post_meta($post->ID, '_submission_name', true) ?: $post->post_title;
+    $email        = get_post_meta($post->ID, '_submission_email', true);
+    $phone        = get_post_meta($post->ID, '_submission_phone', true);
+    $subject      = get_post_meta($post->ID, '_submission_subject', true);
+    $message      = get_post_meta($post->ID, '_submission_message', true);
+    $ip           = get_post_meta($post->ID, '_submission_ip', true);
+    $date         = get_the_date('F j, Y g:i a', $post);
+    $admin_status = get_post_meta($post->ID, '_admin_email_status', true);
+    $admin_err    = get_post_meta($post->ID, '_admin_email_error', true);
+    $user_status  = get_post_meta($post->ID, '_user_email_status', true);
+    $user_err     = get_post_meta($post->ID, '_user_email_error', true);
     ?>
     <style>
         .submission-detail-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .submission-detail-table th { width: 20%; text-align: left; padding: 10px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; font-weight: 600; }
+        .submission-detail-table th { width: 22%; text-align: left; padding: 10px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; font-weight: 600; }
         .submission-detail-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
         .submission-message-box { background: #fdfdfd; border: 1px solid #e2e8f0; padding: 15px; border-radius: 6px; white-space: pre-wrap; line-height: 1.6; }
     </style>
@@ -114,6 +142,36 @@ function render_contact_submission_meta_box($post) {
         <tr>
             <th><?php _e('Subject', _THEME_DOMAIN); ?></th>
             <td><?php echo esc_html($subject); ?></td>
+        </tr>
+        <tr>
+            <th><?php _e('Admin Notification', _THEME_DOMAIN); ?></th>
+            <td>
+                <?php if ($admin_status === 'Sent'): ?>
+                    <span style="color:#0f5132; font-weight:600;">✓ Successfully Sent to Admin</span>
+                <?php elseif ($admin_status === 'Failed'): ?>
+                    <span style="color:#842029; font-weight:600;">✗ Failed to Send</span>
+                    <?php if (!empty($admin_err)): ?>
+                        <div style="color:#842029; font-size:12px; margin-top:4px;">Reason: <code><?php echo esc_html($admin_err); ?></code></div>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <span style="color:#6c757d;">Logged in database</span>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <th><?php _e('User Auto-Reply', _THEME_DOMAIN); ?></th>
+            <td>
+                <?php if ($user_status === 'Sent'): ?>
+                    <span style="color:#0f5132; font-weight:600;">✓ Successfully Sent to Sender (<?php echo esc_html($email); ?>)</span>
+                <?php elseif ($user_status === 'Failed'): ?>
+                    <span style="color:#842029; font-weight:600;">✗ Failed to Send</span>
+                    <?php if (!empty($user_err)): ?>
+                        <div style="color:#842029; font-size:12px; margin-top:4px;">Reason: <code><?php echo esc_html($user_err); ?></code></div>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <span style="color:#6c757d;">Logged in database</span>
+                <?php endif; ?>
+            </td>
         </tr>
         <tr>
             <th><?php _e('Submission Date', _THEME_DOMAIN); ?></th>

@@ -62,10 +62,19 @@ function microlink_handle_contact_submission() {
     }
 
     // 2. Send Styled Notification Email to Admin
-    $admin_email = get_option('microlink_smtp_from_email', get_option('admin_email')) ?: 'info@microlink.co.in';
-    if ($admin_email === 'pnaresh776@gmail.com') {
-        $admin_email = 'info@microlink.co.in';
+    $admin_recipients = get_option('microlink_admin_notification_email');
+    if (empty($admin_recipients)) {
+        $admin_recipients = get_option('microlink_smtp_from_email', get_option('admin_email')) ?: 'info@microlink.co.in';
     }
+    if ($admin_recipients === 'pnaresh776@gmail.com') {
+        $admin_recipients = 'info@microlink.co.in';
+    }
+
+    $from_email = get_option('microlink_smtp_from_email', 'info@microlink.co.in');
+    if ($from_email === 'pnaresh776@gmail.com') {
+        $from_email = 'info@microlink.co.in';
+    }
+    $from_name = get_option('microlink_smtp_from_name', get_bloginfo('name'));
     $site_name = get_bloginfo('name');
     
     $email_fields = array(
@@ -78,14 +87,25 @@ function microlink_handle_contact_submission() {
         'Message'      => $message,
     );
 
-    $admin_email_content = custom_get_styled_email_template('New Application Received', $email_fields, 'Notification sent from ' . $site_name);
-    $headers = array(
+    $admin_email_content = custom_get_styled_email_template('New Contact Inquiry Received', $email_fields, 'Notification sent from ' . $site_name);
+    $admin_headers = array(
         'Content-Type: text/html; charset=UTF-8',
+        'From: ' . $from_name . ' <' . $from_email . '>',
         'Reply-To: ' . $name . ' <' . $email . '>',
     );
 
-    wp_mail($admin_email, 'New Application Received: ' . $subject, $admin_email_content, $headers);
+    // Support comma-separated admin recipients
+    $admin_emails = array_filter(array_map('trim', explode(',', $admin_recipients)));
+    if (empty($admin_emails)) {
+        $admin_emails = array('info@microlink.co.in');
+    }
 
+    $admin_sent = wp_mail($admin_emails, 'New Contact Inquiry: ' . $subject, $admin_email_content, $admin_headers);
+    update_post_meta($post_id, '_admin_email_status', $admin_sent ? 'Sent' : 'Failed');
+    if (!$admin_sent) {
+        $last_err = get_option('microlink_last_mail_error');
+        update_post_meta($post_id, '_admin_email_error', is_array($last_err) ? ($last_err['message'] ?? 'wp_mail returned false') : 'wp_mail returned false');
+    }
 
     // 3. Send Styled Confirmation Email to User
     $user_fields = array(
@@ -95,7 +115,17 @@ function microlink_handle_contact_submission() {
         'Reference ID'    => '#' . $post_id,
     );
     $user_email_content = custom_get_styled_email_template('Thank You for Contacting Us', $user_fields, 'Thank you for reaching out to ' . $site_name);
-    wp_mail($email, 'Thank you for reaching out to ' . $site_name, $user_email_content, array('Content-Type: text/html; charset=UTF-8'));
+    $user_headers = array(
+        'Content-Type: text/html; charset=UTF-8',
+        'From: ' . $from_name . ' <' . $from_email . '>',
+    );
+
+    $user_sent = wp_mail($email, 'Thank you for reaching out to ' . $site_name, $user_email_content, $user_headers);
+    update_post_meta($post_id, '_user_email_status', $user_sent ? 'Sent' : 'Failed');
+    if (!$user_sent) {
+        $last_err = get_option('microlink_last_mail_error');
+        update_post_meta($post_id, '_user_email_error', is_array($last_err) ? ($last_err['message'] ?? 'wp_mail returned false') : 'wp_mail returned false');
+    }
 
     wp_send_json_success(array('message' => __('Thank you! Your message has been sent successfully.', _THEME_DOMAIN)));
 }
