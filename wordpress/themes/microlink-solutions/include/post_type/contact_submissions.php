@@ -38,6 +38,7 @@ function set_custom_contact_submission_columns($columns) {
         'phone'         => __('Phone', _THEME_DOMAIN),
         'subject'       => __('Subject', _THEME_DOMAIN),
         'email_status'  => __('Email Status', _THEME_DOMAIN),
+        'error_log'     => __('Error Log', _THEME_DOMAIN),
         'date'          => __('Date Received', _THEME_DOMAIN),
     );
     return $new_columns;
@@ -73,7 +74,7 @@ function custom_contact_submission_column_data($column, $post_id) {
             if ($admin_status === 'Sent') {
                 echo '<span style="background:#d1e7dd; color:#0f5132; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;">✓ Sent</span>';
             } elseif ($admin_status === 'Failed') {
-                echo '<span style="background:#f8d7da; color:#842029; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="' . esc_attr($admin_err) . '">✗ Not Sent</span>';
+                echo '<span style="background:#f8d7da; color:#842029; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="' . esc_attr($admin_err) . '">✗ Failed</span>';
             } else {
                 echo '<span style="background:#fff3cd; color:#664d03; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="No delivery record found">✗ Not Sent</span>';
             }
@@ -85,13 +86,42 @@ function custom_contact_submission_column_data($column, $post_id) {
             if ($user_status === 'Sent') {
                 echo '<span style="background:#d1e7dd; color:#0f5132; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;">✓ Sent</span>';
             } elseif ($user_status === 'Failed') {
-                echo '<span style="background:#f8d7da; color:#842029; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="' . esc_attr($user_err) . '">✗ Not Sent</span>';
+                echo '<span style="background:#f8d7da; color:#842029; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="' . esc_attr($user_err) . '">✗ Failed</span>';
             } else {
                 echo '<span style="background:#fff3cd; color:#664d03; padding:2px 8px; border-radius:10px; font-weight:600; font-size:11px;" title="No delivery record found">✗ Not Sent</span>';
             }
             echo '</div>';
 
             echo '</div>';
+            break;
+
+        case 'error_log':
+            $admin_err = get_post_meta($post_id, '_admin_email_error', true);
+            $user_err  = get_post_meta($post_id, '_user_email_error', true);
+            $all_err   = get_post_meta($post_id, '_email_error_log', true);
+            
+            $errors = array();
+            if (!empty($admin_err)) {
+                $errors[] = '<span style="font-weight:600;">Admin:</span> ' . esc_html($admin_err);
+            }
+            if (!empty($user_err)) {
+                $errors[] = '<span style="font-weight:600;">User:</span> ' . esc_html($user_err);
+            }
+            if (empty($errors) && !empty($all_err)) {
+                $errors[] = esc_html($all_err);
+            }
+
+            if (!empty($errors)) {
+                echo '<div style="color:#842029; background:#f8d7da; border:1px solid #f5c2c7; padding:4px 8px; border-radius:6px; font-size:11px; max-width:280px; word-break:break-word; line-height:1.4;">' . implode('<div style="height:3px;"></div>', $errors) . '</div>';
+            } else {
+                $admin_status = get_post_meta($post_id, '_admin_email_status', true);
+                $user_status  = get_post_meta($post_id, '_user_email_status', true);
+                if ($admin_status === 'Sent' && $user_status === 'Sent') {
+                    echo '<span style="color:#0f5132; font-size:11px; font-weight:600; background:#d1e7dd; padding:2px 7px; border-radius:10px;">✓ None (Delivered)</span>';
+                } else {
+                    echo '<span style="color:#6c757d; font-size:12px;">—</span>';
+                }
+            }
             break;
     }
 }
@@ -135,6 +165,8 @@ function microlink_handle_resend_submission_emails() {
         $message = get_post_meta($post_id, '_submission_message', true);
         $ip      = get_post_meta($post_id, '_submission_ip', true) ?: 'Unknown';
 
+        $error_entries = array();
+
         // 1. Resend Admin email
         $admin_recipients = get_option('microlink_admin_notification_email');
         if (empty($admin_recipients)) {
@@ -167,8 +199,9 @@ function microlink_handle_resend_submission_emails() {
         $admin_sent = wp_mail($admin_emails, 'New Contact Inquiry: ' . $subject, $admin_content, $admin_headers);
         update_post_meta($post_id, '_admin_email_status', $admin_sent ? 'Sent' : 'Failed');
         if (!$admin_sent) {
-            $last_err = get_option('microlink_last_mail_error');
-            update_post_meta($post_id, '_admin_email_error', is_array($last_err) ? ($last_err['message'] ?? 'wp_mail returned false') : 'wp_mail returned false');
+            $admin_err = function_exists('microlink_get_last_mail_error') ? microlink_get_last_mail_error() : 'Admin email send failed';
+            update_post_meta($post_id, '_admin_email_error', $admin_err);
+            $error_entries[] = 'Admin: ' . $admin_err;
         } else {
             delete_post_meta($post_id, '_admin_email_error');
         }
@@ -190,11 +223,18 @@ function microlink_handle_resend_submission_emails() {
             $user_sent = wp_mail($email, 'Thank you for reaching out to ' . $site_name, $user_content, $user_headers);
             update_post_meta($post_id, '_user_email_status', $user_sent ? 'Sent' : 'Failed');
             if (!$user_sent) {
-                $last_err = get_option('microlink_last_mail_error');
-                update_post_meta($post_id, '_user_email_error', is_array($last_err) ? ($last_err['message'] ?? 'wp_mail returned false') : 'wp_mail returned false');
+                $user_err = function_exists('microlink_get_last_mail_error') ? microlink_get_last_mail_error() : 'User auto-reply failed';
+                update_post_meta($post_id, '_user_email_error', $user_err);
+                $error_entries[] = 'User: ' . $user_err;
             } else {
                 delete_post_meta($post_id, '_user_email_error');
             }
+        }
+
+        if (!empty($error_entries)) {
+            update_post_meta($post_id, '_email_error_log', implode(' | ', $error_entries));
+        } else {
+            delete_post_meta($post_id, '_email_error_log');
         }
 
         $redirect = add_query_arg(array(
@@ -250,6 +290,7 @@ function render_contact_submission_meta_box($post) {
     $admin_err    = get_post_meta($post->ID, '_admin_email_error', true);
     $user_status  = get_post_meta($post->ID, '_user_email_status', true);
     $user_err     = get_post_meta($post->ID, '_user_email_error', true);
+    $email_err_log= get_post_meta($post->ID, '_email_error_log', true);
 
     $resend_url = wp_nonce_url(
         admin_url('admin-post.php?action=microlink_resend_submission_emails&post_id=' . $post->ID),
@@ -314,6 +355,20 @@ function render_contact_submission_meta_box($post) {
                 <?php endif; ?>
             </td>
         </tr>
+        <?php if (!empty($admin_err) || !empty($user_err) || !empty($email_err_log)): ?>
+        <tr>
+            <th><?php _e('Captured Error Log', _THEME_DOMAIN); ?></th>
+            <td>
+                <div style="background:#fff2f2; border:1px solid #f5c2c7; color:#842029; padding:10px 12px; border-radius:6px; font-family:monospace; font-size:12px; line-height:1.5; white-space:pre-wrap;">
+<?php 
+if (!empty($admin_err)) echo '[Admin Email Error]: ' . esc_html($admin_err) . "\n";
+if (!empty($user_err)) echo '[User Auto-Reply Error]: ' . esc_html($user_err) . "\n";
+if (empty($admin_err) && empty($user_err) && !empty($email_err_log)) echo esc_html($email_err_log);
+?>
+                </div>
+            </td>
+        </tr>
+        <?php endif; ?>
         <tr>
             <th><?php _e('Submission Date', _THEME_DOMAIN); ?></th>
             <td><?php echo esc_html($date); ?></td>
@@ -331,4 +386,3 @@ function render_contact_submission_meta_box($post) {
     </table>
     <?php
 }
-
