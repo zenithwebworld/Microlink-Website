@@ -14,7 +14,7 @@ $footer_twitter  = get_theme_mod('footer_twitter', '#');
 $footer_linkedin = get_theme_mod('footer_linkedin', '#');
 
 $company_title   = get_theme_mod('footer_company_title', 'Company');
-$quick_title     = get_theme_mod('footer_quick_title', 'Quick Links');
+$quick_title     = get_theme_mod('footer_quick_title', 'Our Solutions');
 $services_title  = get_theme_mod('footer_services_title', 'Our Services');
 ?>
 <footer id="colophon" class="site-footer footer-section bg-light">
