@@ -18,6 +18,16 @@ class Career_Life_Section_Widget extends WP_Widget {
         ?>
 
         <section class="gallery-section section-gap">
+            <style>
+                .life-media-text {
+                    font-size: 15px;
+                    font-weight: 600;
+                    color: #212529;
+                    line-height: 1.4;
+                    margin-top: 10px;
+                    word-break: break-word;
+                }
+            </style>
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -97,15 +107,29 @@ class Career_Life_Section_Widget extends WP_Widget {
                                                 continue;
                                             }
                                             $post_title = get_the_title();
+
+                                            // Text field meta (with ACF & post meta fallbacks)
+                                            $life_text = get_post_meta(get_the_ID(), '_life_text', true);
+                                            if (empty($life_text) && function_exists('get_field')) {
+                                                $life_text = get_field('life_text') ?: get_field('text') ?: get_field('caption');
+                                            }
+                                            if (empty($life_text)) {
+                                                $life_text = get_post_meta(get_the_ID(), 'life_text', true) ?: get_post_meta(get_the_ID(), 'text', true) ?: get_post_meta(get_the_ID(), 'caption', true);
+                                            }
+                                            $display_text = !empty($life_text) ? $life_text : (!empty($post_title) && stripos($post_title, 'auto draft') === false ? $post_title : '');
+                                            $label = !empty($display_text) ? $display_text : $post_title;
                                     ?>
                                         <div class="col-md-4 col-lg-3">
-                                            <a href="<?php echo esc_url($img_url); ?>" data-fancybox="gallery" class="media-item position-relative" title="<?php echo esc_attr($post_title); ?>">
-                                                <figure class="thumbnail-container object-fit">
+                                            <a href="<?php echo esc_url($img_url); ?>" data-fancybox="gallery" class="media-item position-relative d-block" title="<?php echo esc_attr($label); ?>">
+                                                <figure class="thumbnail-container object-fit mb-0">
                                                     <div class="thumbnail">
-                                                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($post_title); ?>" width="720" height="480">
+                                                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($label); ?>" width="720" height="480">
                                                     </div>
                                                 </figure>
                                             </a>
+                                            <?php if (!empty($display_text)) : ?>
+                                                <p class="life-media-text mt-2 text-center text-dark fw-500 mb-0"><?php echo esc_html($display_text); ?></p>
+                                            <?php endif; ?>
                                         </div>
                                     <?php
                                         endwhile;
@@ -163,22 +187,36 @@ class Career_Life_Section_Widget extends WP_Widget {
                                             if (empty($video_url)) {
                                                 $video_url = get_permalink();
                                             }
+
+                                            // Text field meta (with ACF & post meta fallbacks)
+                                            $life_text = get_post_meta(get_the_ID(), '_life_text', true);
+                                            if (empty($life_text) && function_exists('get_field')) {
+                                                $life_text = get_field('life_text') ?: get_field('text') ?: get_field('caption');
+                                            }
+                                            if (empty($life_text)) {
+                                                $life_text = get_post_meta(get_the_ID(), 'life_text', true) ?: get_post_meta(get_the_ID(), 'text', true) ?: get_post_meta(get_the_ID(), 'caption', true);
+                                            }
+                                            $display_text = !empty($life_text) ? $life_text : (!empty($post_title) && stripos($post_title, 'auto draft') === false ? $post_title : '');
+                                            $label = !empty($display_text) ? $display_text : $post_title;
                                     ?>
                                         <div class="col-md-4 col-lg-3">
-                                            <a data-fancybox href="<?php echo esc_url($video_url); ?>" class="media-item position-relative" title="<?php echo esc_attr($post_title); ?>">
-                                                <figure class="thumbnail-container object-fit">
+                                            <a data-fancybox href="<?php echo esc_url($video_url); ?>" class="media-item position-relative d-block" title="<?php echo esc_attr($label); ?>">
+                                                <figure class="thumbnail-container object-fit mb-0">
                                                     <div class="thumbnail">
                                                         <?php if (!empty($img_url)) : ?>
-                                                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($post_title); ?>" width="720" height="480">
+                                                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($label); ?>" width="720" height="480">
                                                         <?php else : ?>
                                                             <div class="bg-secondary text-white p-4 text-center d-flex align-items-center justify-content-center h-100">
-                                                                <span><?php echo esc_html($post_title); ?></span>
+                                                                <span><?php echo esc_html($label); ?></span>
                                                             </div>
                                                         <?php endif; ?>
                                                     </div>
                                                 </figure>
                                                 <div class="play-btn">▶</div>
                                             </a>
+                                            <?php if (!empty($display_text)) : ?>
+                                                <p class="life-media-text mt-2 text-center text-dark fw-500 mb-0"><?php echo esc_html($display_text); ?></p>
+                                            <?php endif; ?>
                                         </div>
                                     <?php
                                         endwhile;

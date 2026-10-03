@@ -75,7 +75,14 @@ function render_life_media_meta_box($post) {
     $media_type = get_post_meta($post->ID, '_life_media_type', true) ?: 'photo';
     $photo_url  = get_post_meta($post->ID, '_life_photo_url', true) ?: '';
     $video_url  = get_post_meta($post->ID, '_life_video_url', true) ?: '';
+    $life_text  = get_post_meta($post->ID, '_life_text', true) ?: '';
     ?>
+
+    <p style="margin-bottom: 20px;">
+        <label for="life_text"><strong><?php _e('Caption / Text Description (Displays below Image/Video)', _THEME_DOMAIN); ?>:</strong></label><br>
+        <input type="text" name="life_text" id="life_text" value="<?php echo esc_attr($life_text); ?>" class="widefat" placeholder="e.g. AI & Cyber Resilience Tech Summit 2026">
+        <span class="description" style="color:#666; font-size:12px;"><?php _e('Enter the text/caption to display directly beneath the image or video on the website.', _THEME_DOMAIN); ?></span>
+    </p>
 
     <p style="margin-bottom: 20px;">
         <label for="life_media_type"><strong><?php _e('Media Category / Type', _THEME_DOMAIN); ?>:</strong></label><br>
@@ -161,6 +168,9 @@ function save_life_media_meta_box($post_id) {
         return;
     }
 
+    if (isset($_POST['life_text'])) {
+        update_post_meta($post_id, '_life_text', sanitize_text_field($_POST['life_text']));
+    }
     if (isset($_POST['life_media_type'])) {
         update_post_meta($post_id, '_life_media_type', sanitize_text_field($_POST['life_media_type']));
     }
@@ -172,3 +182,18 @@ function save_life_media_meta_box($post_id) {
     }
 }
 add_action('save_post_life_microlink', 'save_life_media_meta_box');
+
+// Register Post Meta for Life @ Microlink
+function register_life_microlink_meta() {
+    register_post_meta('life_microlink', '_life_text', array(
+        'show_in_rest' => true,
+        'single'       => true,
+        'type'         => 'string',
+    ));
+    register_post_meta('life_microlink', 'life_text', array(
+        'show_in_rest' => true,
+        'single'       => true,
+        'type'         => 'string',
+    ));
+}
+add_action('init', 'register_life_microlink_meta');
