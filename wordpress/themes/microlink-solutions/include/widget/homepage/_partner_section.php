@@ -32,13 +32,13 @@ class Home_Partner_Section_Widget extends WP_Widget {
                             data-aos-delay="120">
                             <div class="display-1 text-white text-uppercase text-nowrap d-flex align-items-center">
                                 <?php
-                                $partners = new WP_Query([
-                                    'post_type' => 'partner',
+                                $clients = new WP_Query([
+                                    'post_type' => 'client',
                                     'posts_per_page' => -1
                                 ]);
 
-                                if ($partners->have_posts()) :
-                                    while ($partners->have_posts()) : $partners->the_post();
+                                if ($clients->have_posts()) :
+                                    while ($clients->have_posts()) : $clients->the_post();
                                         $logo = get_the_post_thumbnail_url(get_the_ID(), 'full');
                                 ?>
 
@@ -62,9 +62,9 @@ class Home_Partner_Section_Widget extends WP_Widget {
         <?php echo $args['after_widget'];
     }
 
-    // Backend Form (UNCHANGED)
+    // Backend Form
     public function form($instance) { ?>
-        <p><strong>Partners are automatically fetched from CPT (partners)</strong></p>
+        <p><strong>Clients are automatically fetched from CPT (clients)</strong></p>
     <?php }
 
     // Save Data (UNCHANGED)

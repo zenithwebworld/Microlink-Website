@@ -20,10 +20,13 @@ function create_awards_cpt() {
         'label'              => __('Awards & Recognition', _THEME_DOMAIN),
         'labels'             => $labels,
         'public'             => true,
+        'publicly_queryable' => false,
+        'exclude_from_search'=> true,
+        'has_archive'        => false,
+        'query_var'          => false,
+        'rewrite'            => false,
         'menu_icon'          => 'dashicons-awards',
         'supports'           => array('title'),
-        'has_archive'        => true,
-        'rewrite'            => array('slug' => 'awards-recognition'),
         'show_in_rest'       => true,
     );
 
@@ -34,15 +37,16 @@ add_action('init', 'create_awards_cpt');
 // Register Custom Taxonomy for Award Categories
 function create_award_taxonomy() {
     register_taxonomy('award_category', 'award', array(
-        'label'        => __('Award Categories', _THEME_DOMAIN),
-        'labels'       => array(
+        'label'              => __('Award Categories', _THEME_DOMAIN),
+        'labels'             => array(
             'name'          => __('Award Categories', _THEME_DOMAIN),
             'singular_name' => __('Award Category', _THEME_DOMAIN),
             'add_new_item'  => __('Add New Category', _THEME_DOMAIN),
         ),
-        'hierarchical' => true,
-        'rewrite'      => array('slug' => 'award-category'),
-        'show_in_rest' => true,
+        'hierarchical'       => true,
+        'publicly_queryable' => false,
+        'rewrite'            => false,
+        'show_in_rest'       => true,
     ));
 }
 add_action('init', 'create_award_taxonomy');

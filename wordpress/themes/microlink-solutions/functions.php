@@ -190,6 +190,7 @@ require get_template_directory() . '/inc/class-mega-menu-walker.php';
 require get_template_directory() . '/include/post_type/solution.php';
 require get_template_directory() . '/include/post_type/services.php';
 require get_template_directory() . '/include/post_type/partners.php';
+require get_template_directory() . '/include/post_type/clients.php';
 require get_template_directory() . '/include/post_type/testimonial.php';
 require get_template_directory() . '/include/post_type/teams.php';
 require get_template_directory() . '/include/post_type/stories.php';
