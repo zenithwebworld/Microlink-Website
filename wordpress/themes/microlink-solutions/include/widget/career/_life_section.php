@@ -116,7 +116,7 @@ class Career_Life_Section_Widget extends WP_Widget {
                                             if (empty($life_text)) {
                                                 $life_text = get_post_meta(get_the_ID(), 'life_text', true) ?: get_post_meta(get_the_ID(), 'text', true) ?: get_post_meta(get_the_ID(), 'caption', true);
                                             }
-                                            $display_text = !empty($life_text) ? $life_text : (!empty($post_title) && stripos($post_title, 'auto draft') === false ? $post_title : '');
+                                            $display_text = !empty($life_text) ? $life_text : '';
                                             $label = !empty($display_text) ? $display_text : $post_title;
                                     ?>
                                         <div class="col-md-4 col-lg-3">
@@ -196,7 +196,7 @@ class Career_Life_Section_Widget extends WP_Widget {
                                             if (empty($life_text)) {
                                                 $life_text = get_post_meta(get_the_ID(), 'life_text', true) ?: get_post_meta(get_the_ID(), 'text', true) ?: get_post_meta(get_the_ID(), 'caption', true);
                                             }
-                                            $display_text = !empty($life_text) ? $life_text : (!empty($post_title) && stripos($post_title, 'auto draft') === false ? $post_title : '');
+                                            $display_text = !empty($life_text) ? $life_text : '';
                                             $label = !empty($display_text) ? $display_text : $post_title;
                                     ?>
                                         <div class="col-md-4 col-lg-3">
