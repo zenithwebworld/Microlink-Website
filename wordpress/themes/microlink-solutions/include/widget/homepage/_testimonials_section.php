@@ -48,7 +48,21 @@ class Home_Testimonials_Section_Widget extends WP_Widget {
                                     $img = $img ?: get_template_directory_uri().'/assets/images/testimonials.png';
 
                                     $name = get_the_title();
-                                    $designation = get_post_meta(get_the_ID(), '_testimonial_designation', true);
+
+                                    // Designation & Company Name Meta
+                                    $designation  = get_post_meta(get_the_ID(), '_testimonial_designation', true) ?: get_post_meta(get_the_ID(), 'designation', true);
+                                    $company_name = get_post_meta(get_the_ID(), 'company_name', true) ?: get_post_meta(get_the_ID(), '_testimonial_company_name', true);
+
+                                    if (empty($designation) && function_exists('get_field')) {
+                                        $designation = get_field('_testimonial_designation') ?: get_field('designation');
+                                    }
+                                    if (empty($company_name) && function_exists('get_field')) {
+                                        $company_name = get_field('company_name') ?: get_field('_testimonial_company_name');
+                                    }
+
+                                    $meta_parts = array_filter(array_map('trim', [$designation, $company_name]));
+                                    $client_meta = !empty($meta_parts) ? implode(', ', $meta_parts) : '';
+
                                     $text = wp_trim_words(get_the_content(), 40);
                             ?>
 
@@ -56,9 +70,9 @@ class Home_Testimonials_Section_Widget extends WP_Widget {
                                 <div class="img mx-auto">
                                     <img src="<?php echo esc_url($img); ?>" alt="" width="88" height="66">
                                 </div>
-                                <h5 class=".client-name mt-4 pt-xl-3"><?php echo esc_html($name); ?></h5>
-                                <?php if(!empty($designation)) { ?>
-                                    <p class="client-designation">(<?php echo esc_html($designation); ?>)</p>
+                                <h5 class="client-name mt-4 pt-xl-3"><?php echo esc_html($name); ?></h5>
+                                <?php if(!empty($client_meta)) { ?>
+                                    <p class="client-designation">(<?php echo esc_html($client_meta); ?>)</p>
                                 <?php } else { ?>
                                     <p class="client-designation">&nbsp;</p>
                                 <?php } ?>

@@ -31,3 +31,23 @@ function create_testimonial_cpt() {
     register_post_type('testimonial', $args);
 }
 add_action('init', 'create_testimonial_cpt');
+
+// Register Testimonial Post Meta
+function register_testimonial_meta() {
+    register_post_meta('testimonial', 'company_name', array(
+        'show_in_rest' => true,
+        'single'       => true,
+        'type'         => 'string',
+    ));
+    register_post_meta('testimonial', '_testimonial_designation', array(
+        'show_in_rest' => true,
+        'single'       => true,
+        'type'         => 'string',
+    ));
+    register_post_meta('testimonial', 'designation', array(
+        'show_in_rest' => true,
+        'single'       => true,
+        'type'         => 'string',
+    ));
+}
+add_action('init', 'register_testimonial_meta');
