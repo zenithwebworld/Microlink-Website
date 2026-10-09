@@ -31,27 +31,27 @@ class Partnership_Section_Widget extends WP_Widget {
                     </div>
                 </div>
 
+                <?php if (!empty($terms) && !is_wp_error($terms) && count($terms) > 0) : ?>
                 <div class="d-flex justify-content-center align-items-center flex-wrap cm-nav mb-4">
                     <ul class="nav nav-pills mt-3 mt-md-0" id="partnerTab" role="tablist">
                         <li class="nav-item">
                             <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#partner-all">All Partners</button>
                         </li>
-                        <?php if (!empty($terms) && !is_wp_error($terms)) : ?>
-                            <?php foreach ($terms as $term) : ?>
-                                <li class="nav-item">
-                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#partner-<?php echo esc_attr($term->slug); ?>">
-                                        <?php echo esc_html($term->name); ?>
-                                    </button>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                        <?php foreach ($terms as $term) : ?>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#partner-<?php echo esc_attr($term->slug); ?>">
+                                    <?php echo esc_html($term->name); ?>
+                                </button>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
+                <?php endif; ?>
 
                 <div class="tab-content" id="partnerTabContent">
                     <!-- ALL PARTNERS TAB -->
                     <div class="tab-pane fade show active mt-4" id="partner-all">
-                        <div class="row g-4">
+                        <div class="row g-3 g-lg-4">
                             <?php
                             $all_partners = new WP_Query([
                                 'post_type'      => 'partner',
@@ -62,12 +62,12 @@ class Partnership_Section_Widget extends WP_Widget {
                                 while ($all_partners->have_posts()) : $all_partners->the_post();
                                     $logo = get_the_post_thumbnail_url(get_the_ID(), 'full');
                             ?>
-                                <div class="col-md-6 col-lg-3">
-                                    <div class="partner-card h-100 p-3 bg-white border rounded text-center d-flex align-items-center justify-content-center">
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                    <div class="partner-card bg-white border rounded text-center d-flex align-items-center justify-content-center">
                                         <div class="thumbnail-container">
                                             <div class="thumbnail">
                                                 <?php if (!empty($logo)) : ?>
-                                                    <img src="<?php echo esc_url($logo); ?>" alt="<?php the_title_attribute(); ?>" style="max-height: 80px; width: auto;">
+                                                    <img src="<?php echo esc_url($logo); ?>" alt="<?php the_title_attribute(); ?>" width="200" height="200" loading="lazy">
                                                 <?php else : ?>
                                                     <span class="fw-bold"><?php the_title(); ?></span>
                                                 <?php endif; ?>
@@ -89,7 +89,7 @@ class Partnership_Section_Widget extends WP_Widget {
                     <?php if (!empty($terms) && !is_wp_error($terms)) : ?>
                         <?php foreach ($terms as $term) : ?>
                             <div class="tab-pane fade mt-4" id="partner-<?php echo esc_attr($term->slug); ?>">
-                                <div class="row g-4">
+                                <div class="row g-3 g-lg-4">
                                     <div class="col-12"><h3 class="h5 fw-bold text-primary mb-3"><?php echo esc_html($term->name); ?></h3></div>
                                     <?php
                                     $cat_partners = new WP_Query([
@@ -108,12 +108,12 @@ class Partnership_Section_Widget extends WP_Widget {
                                         while ($cat_partners->have_posts()) : $cat_partners->the_post();
                                             $cat_logo = get_the_post_thumbnail_url(get_the_ID(), 'full');
                                     ?>
-                                        <div class="col-md-6 col-lg-3">
-                                            <div class="partner-card h-100 p-3 bg-white border rounded text-center d-flex align-items-center justify-content-center">
+                                        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                            <div class="partner-card bg-white border rounded text-center d-flex align-items-center justify-content-center">
                                                 <div class="thumbnail-container">
                                                     <div class="thumbnail">
                                                         <?php if (!empty($cat_logo)) : ?>
-                                                            <img src="<?php echo esc_url($cat_logo); ?>" alt="<?php the_title_attribute(); ?>" style="max-height: 80px; width: auto;">
+                                                            <img src="<?php echo esc_url($cat_logo); ?>" alt="<?php the_title_attribute(); ?>" width="200" height="200" loading="lazy">
                                                         <?php else : ?>
                                                             <span class="fw-bold"><?php the_title(); ?></span>
                                                         <?php endif; ?>
