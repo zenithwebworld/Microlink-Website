@@ -9,6 +9,7 @@ function microlink_solutions_setup() {
 	add_theme_support('automatic-feed-links');
 	add_theme_support('title-tag');
 	add_theme_support('post-thumbnails');
+	add_image_size('client-logo', 300, 300, true);
 	register_nav_menus(
 		array(
 			'primary-menu' => esc_html__( 'Primary Menu', 'microlink-solutions' ),
@@ -175,7 +176,7 @@ function microlink_solutions_scripts() {
         'main-js',
         get_template_directory_uri() . '/assets/js/html-common.js',
         array('jquery'),
-        null,
+        filemtime(get_template_directory() . '/assets/js/html-common.js'),
         true
     );
 

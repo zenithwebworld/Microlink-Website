@@ -14,7 +14,7 @@ class Home_Partner_Section_Widget extends WP_Widget {
     public function widget($args, $instance) {
         echo $args['before_widget']; ?>
 
-        <section class="section-gap double-gap partner-section">
+        <section class="section-gap double-gap partner-section client-section">
             <img class="lazy banner-bg-1" src="<?php echo site_url('wp-content/uploads/2026/03/banner-bg-1.png'); ?>" alt="" title="" width="87" height="25">
             <img class="lazy banner-bg-2" src="<?php echo site_url('wp-content/uploads/2026/03/banner-bg-2.png'); ?>" alt="" title="" width="87" height="25">
             <div class="container-fluid">
@@ -28,7 +28,7 @@ class Home_Partner_Section_Widget extends WP_Widget {
                         </p>
                     </div>
                     <div class="col-12">
-                        <div class="partner-marquee-slider overflow-hidden d-flex" data-aos="fade-left"
+                        <div class="partner-marquee-slider client-marquee-slider overflow-hidden d-flex" data-speed="1.2" data-aos="fade-left"
                             data-aos-delay="120">
                             <div class="display-1 text-white text-uppercase text-nowrap d-flex align-items-center">
                                 <?php
@@ -40,10 +40,13 @@ class Home_Partner_Section_Widget extends WP_Widget {
                                 if ($clients->have_posts()) :
                                     while ($clients->have_posts()) : $clients->the_post();
                                         $logo = get_the_post_thumbnail_url(get_the_ID(), 'full');
+                                        if (empty($logo)) {
+                                            continue;
+                                        }
                                 ?>
 
-                                <span>
-                                    <img src="<?php echo esc_url($logo); ?>" alt="<?php the_title(); ?>" title="<?php the_title(); ?>" width="891" height="594">
+                                <span class="client-logo-item">
+                                    <img src="<?php echo esc_url($logo); ?>" alt="<?php the_title_attribute(); ?>" title="<?php the_title_attribute(); ?>" width="180" height="180" loading="lazy">
                                 </span>
 
                                 <?php

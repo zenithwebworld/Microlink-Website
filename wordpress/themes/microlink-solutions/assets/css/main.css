@@ -2618,7 +2618,7 @@ body img {
 }
 
 .footer-section .footer-menu-link .footer-bullet-icon,
-.footer-section ul li > .n-icon {
+.footer-section ul li>.n-icon {
   margin-top: 5px;
   flex-shrink: 0;
   vertical-align: middle;
@@ -2862,6 +2862,62 @@ body img {
   max-width: 250px;
 }
 
+/* Client Section 1:1 Aspect Ratio */
+.client-section .partner-marquee-slider span,
+.partner-section .client-marquee-slider span,
+.partner-section .partner-marquee-slider .client-logo-item {
+  width: 180px;
+  height: 180px;
+  max-width: 180px;
+  max-height: 180px;
+  aspect-ratio: 1 / 1;
+  flex: 0 0 180px;
+  margin-right: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  padding: 15px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.client-section .partner-marquee-slider span img,
+.partner-section .client-marquee-slider span img,
+.partner-section .partner-marquee-slider .client-logo-item img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+
+@media (max-width: 991px) {
+
+  .client-section .partner-marquee-slider span,
+  .partner-section .client-marquee-slider span,
+  .partner-section .partner-marquee-slider .client-logo-item {
+    width: 140px;
+    height: 140px;
+    max-width: 140px;
+    max-height: 140px;
+    flex: 0 0 140px;
+    margin-right: 25px;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .client-section .partner-marquee-slider span img,
+  .partner-section .client-marquee-slider span img,
+  .partner-section .partner-marquee-slider .client-logo-item img {
+    border-radius: 6px;
+  }
+}
+
 @media (max-width: 767px) {
   .partner-section .partner-marquee-slider span {
     margin-right: 30px;
@@ -2869,6 +2925,25 @@ body img {
 
   .partner-section .partner-marquee-slider span img {
     max-width: 180px;
+  }
+
+  .client-section .partner-marquee-slider span,
+  .partner-section .client-marquee-slider span,
+  .partner-section .partner-marquee-slider .client-logo-item {
+    width: 120px;
+    height: 120px;
+    max-width: 120px;
+    max-height: 120px;
+    flex: 0 0 120px;
+    margin-right: 20px;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .client-section .partner-marquee-slider span img,
+  .partner-section .client-marquee-slider span img,
+  .partner-section .partner-marquee-slider .client-logo-item img {
+    border-radius: 6px;
   }
 }
 
@@ -5354,4 +5429,4 @@ span.wpcf7-spinner {
   display: inline-flex;
   align-items: center;
   vertical-align: middle;
-}
+}
