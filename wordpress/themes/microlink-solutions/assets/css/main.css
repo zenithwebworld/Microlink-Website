@@ -2607,33 +2607,42 @@ body img {
   margin-bottom: 10px;
 }
 
-.footer-section ul li a {
+.footer-section ul li a,
+.footer-section .footer-menu-link {
   color: #333;
-  text-decoration: none;
+  text-decoration: none !important;
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+
+.footer-section .footer-menu-link .footer-bullet-icon,
+.footer-section ul li > .n-icon {
+  margin-top: 5px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.footer-section .footer-menu-text {
   position: relative;
   display: inline-block;
 }
 
-.footer-section ul li a::after {
-  content: "";
-  background-color: var(--primary);
-  transform-origin: 0;
-  height: 2px;
-  transition: transform .5s;
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  right: 0;
-  transform: scaleX(0);
+.footer-section ul li a::after,
+.footer-section .footer-menu-link::after,
+.footer-section .footer-menu-link .footer-menu-text::after {
+  display: none !important;
 }
 
-.footer-section ul li a:hover {
+.footer-section ul li a:hover,
+.footer-section ul li a:focus,
+.footer-section ul li a:active,
+.footer-section .footer-menu-link:hover,
+.footer-section .footer-menu-link:focus,
+.footer-section .footer-menu-link:active {
   color: var(--primary);
-}
-
-.footer-section ul li a:hover::after {
-  transform-origin: 100%;
-  transform: scale(1);
+  text-decoration: none !important;
 }
 
 .footer-section .footer-bottom {
@@ -2653,17 +2662,32 @@ body img {
 @media (max-width: 767px) {
   .footer-section {
     padding: 40px 0 30px;
+    overflow: hidden;
+  }
+
+  .footer-section::before,
+  .footer-section::after {
+    display: none;
+  }
+
+  .footer-section .footer-card {
+    margin-bottom: 25px;
+  }
+
+  .footer-section .title {
+    margin-top: 15px;
+    margin-bottom: 12px;
   }
 
   .footer-section .footer-bottom {
     flex-direction: column;
     text-align: center;
-    padding-top: 30px;
-    gap: 10px;
+    padding-top: 25px;
+    gap: 12px;
   }
 
   .footer-section .social-icons {
-    margin-top: 10px;
+    margin-top: 5px;
   }
 }
 
@@ -4601,19 +4625,11 @@ body img {
   padding-bottom: 25%;
 }
 
-.partner-card:hover {
-  transform: translateY(-5px);
-}
-
 .partner-card img {
   max-height: 60px;
   margin-bottom: 20px;
-  filter: grayscale(100%);
+  filter: none;
   transition: 0.3s;
-}
-
-.partner-card:hover img {
-  filter: grayscale(0%);
 }
 
 .nav-pills .nav-link {
