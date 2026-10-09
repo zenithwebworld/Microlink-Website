@@ -202,7 +202,6 @@ require get_template_directory() . '/include/post_type/contact_submissions.php';
 require get_template_directory() . '/include/admin/smtp_settings.php';
 require get_template_directory() . '/include/contact_form_handler.php';
 
-
 // Include widgets (Common)
 require get_template_directory() . '/include/widget/common/_page_header.php';
 require get_template_directory() . '/include/widget/common/_case_studies_section.php';
@@ -305,16 +304,12 @@ class Footer_Menu_Walker extends Walker_Nav_Menu {
 
     function start_el(&$output, $item, $depth=0, $args=[], $id=0) {
 
-        $output .= '<li>';
+        $output .= '<li class="footer-menu-item">';
 
-        $output .= '<i class="n-icon text-primary me-2" 
-            data-icon="s-right-dubble" 
-            data-iconwidth="12px" 
-            data-iconheight="12px"></i>';
-
-        $output .= '<a href="' . esc_url($item->url) . '">' 
-                    . esc_html($item->title) . 
-                   '</a>';
+        $output .= '<a href="' . esc_url($item->url) . '" class="footer-menu-link">'
+                    . '<i class="n-icon text-primary me-2 flex-shrink-0 footer-bullet-icon" data-icon="s-right-dubble" data-iconwidth="12px" data-iconheight="12px"></i>'
+                    . '<span class="footer-menu-text">' . esc_html($item->title) . '</span>'
+                 . '</a>';
 
         $output .= '</li>';
     }
