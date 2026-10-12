@@ -142,9 +142,30 @@ $partners_query = new WP_Query([
     'posts_per_page' => -1
 ]);
 
+$partner_logos = [];
 if ($partners_query->have_posts()) :
+    while ($partners_query->have_posts()) : $partners_query->the_post();
+        $logo = get_the_post_thumbnail_url(get_the_ID(), 'full');
+        if (!empty($logo)) {
+            $partner_logos[] = [
+                'logo'  => $logo,
+                'title' => get_the_title()
+            ];
+        }
+    endwhile;
+    wp_reset_postdata();
+endif;
+
+if (!empty($partner_logos)) :
+    // Ensure enough items for continuous smooth marquee loop
+    $display_partners = $partner_logos;
+    while (count($display_partners) < 8) {
+        $display_partners = array_merge($display_partners, $partner_logos);
+    }
 ?>
-    <section class="section-gap double-gap partner-section">
+    <section class="section-gap double-gap partner-section client-section position-relative">
+        <img class="lazy banner-bg-1" src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/banner-bg-1.png'); ?>" alt="" title="" width="87" height="25">
+        <img class="lazy banner-bg-2" src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/banner-bg-2.png'); ?>" alt="" title="" width="87" height="25">
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-xl-6 mb-5 text-center" data-aos="fade-up" data-aos-delay="80">
@@ -152,22 +173,13 @@ if ($partners_query->have_posts()) :
                     <p class="text-white opacity-75">Our partners and OEMs are the backbone of our trust and success. Meet our Partners & OEMs for your Secure Digital Transformation journey.</p>
                 </div>
                 <div class="col-12">
-                    <div class="partner-marquee-slider overflow-hidden d-flex" data-aos="fade-left" data-aos-delay="120">
+                    <div class="partner-marquee-slider client-marquee-slider overflow-hidden d-flex" data-speed="1.2" data-aos="fade-left" data-aos-delay="120">
                         <div class="display-1 text-white text-uppercase text-nowrap d-flex align-items-center">
-                            <?php
-                            while ($partners_query->have_posts()) : $partners_query->the_post();
-                                $logo = get_the_post_thumbnail_url(get_the_ID(), 'full');
-                                if (empty($logo)) {
-                                    continue;
-                                }
-                            ?>
-                                <span class="mx-3">
-                                    <img src="<?php echo esc_url($logo); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" title="<?php echo esc_attr(get_the_title()); ?>" width="180" height="70" style="object-fit:contain; max-height:70px;">
+                            <?php foreach ($display_partners as $partner_item) : ?>
+                                <span class="client-logo-item">
+                                    <img src="<?php echo esc_url($partner_item['logo']); ?>" alt="<?php echo esc_attr($partner_item['title']); ?>" title="<?php echo esc_attr($partner_item['title']); ?>" width="180" height="180" loading="lazy">
                                 </span>
-                            <?php
-                            endwhile;
-                            wp_reset_postdata();
-                            ?>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
