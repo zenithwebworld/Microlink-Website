@@ -196,6 +196,14 @@ if ($partners_query->have_posts()) :
     </section>
 <?php endif; ?>
 
+<?php
+$stories = new WP_Query([
+    'post_type'      => 'story',
+    'posts_per_page' => 6
+]);
+
+if ($stories->have_posts()) :
+?>
 <!-- Customer Success Stories Section -->
 <section class="case-study-section section-gap common-owl">
     <div class="container">
@@ -212,19 +220,13 @@ if ($partners_query->have_posts()) :
             <div class="col-12">
                 <div class="owl-carousel portfolio-slider">
                     <?php
-                    $stories = new WP_Query([
-                        'post_type'      => 'story',
-                        'posts_per_page' => 6
-                    ]);
-
-                    if ($stories->have_posts()) :
-                        while ($stories->have_posts()) : $stories->the_post();
-                            $story_title = get_the_title();
-                            $featured_image = get_the_post_thumbnail_url(get_the_ID(), 'full') ?: get_template_directory_uri() . '/assets/images/blog-large.webp';
-                            $badge1 = get_post_meta(get_the_ID(), 'badge_1', true) ?: 'Innovation';
-                            $badge2 = get_post_meta(get_the_ID(), 'badge_2', true) ?: 'Results';
-                            $desc   = wp_trim_words(get_the_excerpt(), 15);
-                            $story_link = get_permalink();
+                    while ($stories->have_posts()) : $stories->the_post();
+                        $story_title = get_the_title();
+                        $featured_image = get_the_post_thumbnail_url(get_the_ID(), 'full') ?: get_template_directory_uri() . '/assets/images/blog-large.webp';
+                        $badge1 = get_post_meta(get_the_ID(), 'badge_1', true) ?: 'Innovation';
+                        $badge2 = get_post_meta(get_the_ID(), 'badge_2', true) ?: 'Results';
+                        $desc   = wp_trim_words(get_the_excerpt(), 15);
+                        $story_link = get_permalink();
                     ?>
 
                     <div class="portfolio-card">
@@ -246,11 +248,8 @@ if ($partners_query->have_posts()) :
                     </div>
 
                     <?php
-                        endwhile;
-                        wp_reset_postdata();
-                    else :
-                        echo '<div class="col-12 text-center text-muted"><p>No success stories published yet.</p></div>';
-                    endif;
+                    endwhile;
+                    wp_reset_postdata();
                     ?>
 
                 </div>
@@ -258,5 +257,6 @@ if ($partners_query->have_posts()) :
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <?php get_footer(); ?>
