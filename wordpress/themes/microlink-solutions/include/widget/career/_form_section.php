@@ -13,10 +13,10 @@ class Candidate_Form_Section_Widget extends WP_Widget {
     public function widget($args, $instance) {
         echo $args['before_widget'];
 
-        $title        = !empty($instance['title']) ? $instance['title'] : 'Application Form';
-        $subtitle     = !empty($instance['subtitle']) ? $instance['subtitle'] : 'Take the next step in your career with Microlink. Fill out the application details below and our recruitment team will review your profile.';
-        $form_title   = !empty($instance['form_title']) ? $instance['form_title'] : 'Send us your Application';
-        $recipient    = !empty($instance['recipient_email']) ? $instance['recipient_email'] : 'jobs@microlink.co.in';
+        $title        = !empty($instance['title']) ? $instance['title'] : get_option('candidate_form_title', 'Application Form');
+        $subtitle     = !empty($instance['subtitle']) ? $instance['subtitle'] : get_option('candidate_form_subtitle', 'Take the next step in your career with Microlink. Fill out the application details below and our recruitment team will review your profile.');
+        $form_title   = !empty($instance['form_title']) ? $instance['form_title'] : get_option('candidate_form_heading', 'Send us your Application');
+        $recipient    = !empty($instance['recipient_email']) ? $instance['recipient_email'] : get_option('candidate_form_recipient_email', 'jobs@microlink.co.in');
 
         $submission_status = '';
         $submission_msg    = '';

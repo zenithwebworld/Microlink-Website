@@ -50,13 +50,23 @@ class Awards_Section_Widget extends WP_Widget {
                                         }
                                 ?>
                                     <div class="col-md-4 col-lg-3">
-                                        <a href="<?php echo esc_url($img_url); ?>" data-fancybox="gallery" class="media-item position-relative" title="<?php echo esc_attr($label); ?>">
-                                            <figure class="thumbnail-container object-fit">
-                                                <div class="thumbnail">
-                                                    <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($label); ?>" width="720" height="480">
-                                                </div>
-                                            </figure>
-                                        </a>
+                                        <div class="award-card text-center">
+                                            <div class="media-item position-relative d-block">
+                                                <figure class="thumbnail-container object-fit mb-0">
+                                                    <div class="thumbnail">
+                                                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($label); ?>" width="720" height="480">
+                                                    </div>
+                                                </figure>
+                                            </div>
+                                            <div class="award-info mt-3">
+                                                <?php if (!empty($post_title)) : ?>
+                                                    <h5 class="award-title fw-bold text-dark mb-1 fs-5"><?php echo esc_html($post_title); ?></h5>
+                                                <?php endif; ?>
+                                                <?php if (!empty($subtitle)) : ?>
+                                                    <p class="award-subtitle text-muted mb-0 small"><?php echo esc_html($subtitle); ?></p>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
                                     </div>
                                 <?php
                                     endwhile;

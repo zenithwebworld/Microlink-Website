@@ -201,6 +201,7 @@ require get_template_directory() . '/include/post_type/awards.php';
 require get_template_directory() . '/include/post_type/case_studies.php';
 require get_template_directory() . '/include/post_type/contact_submissions.php';
 require get_template_directory() . '/include/admin/smtp_settings.php';
+require get_template_directory() . '/include/admin/candidate_form_settings.php';
 require get_template_directory() . '/include/contact_form_handler.php';
 
 // Include widgets (Common)
