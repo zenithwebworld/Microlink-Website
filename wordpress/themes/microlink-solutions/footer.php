@@ -9,9 +9,14 @@ $footer_email    = get_theme_mod('footer_email', 'info@microlink.co.in');
 $footer_phone    = get_theme_mod('footer_phone', '+91 98244 08739');
 $footer_address  = get_theme_mod('footer_address', '4th Floor, Sarthik Complex, Near Iscon Circle, Satellite, Ahmedabad, Gujarat 380015');
 
-$footer_facebook = get_theme_mod('footer_facebook', '#');
-$footer_twitter  = get_theme_mod('footer_twitter', '#');
-$footer_linkedin = get_theme_mod('footer_linkedin', '#');
+$footer_facebook = get_theme_mod('footer_facebook', 'https://www.facebook.com/microlinksolutions');
+if ($footer_facebook === '#') {
+    $footer_facebook = 'https://www.facebook.com/microlinksolutions';
+}
+$footer_linkedin = get_theme_mod('footer_linkedin', 'https://www.linkedin.com/company/microlinksolutionpvtltd');
+if ($footer_linkedin === '#') {
+    $footer_linkedin = 'https://www.linkedin.com/company/microlinksolutionpvtltd';
+}
 
 $company_title   = get_theme_mod('footer_company_title', 'Company');
 $quick_title     = get_theme_mod('footer_quick_title', 'Our Solutions');
@@ -108,11 +113,6 @@ $services_title  = get_theme_mod('footer_services_title', 'Our Services');
                 <?php if (!empty($footer_facebook)) : ?>
                     <a href="<?php echo esc_url($footer_facebook); ?>" class="me-2 icon-circle" target="_blank" rel="noopener">
                         <i class="n-icon" data-icon="s-facebook" data-iconwidth="22px" data-iconheight="22px"></i>
-                    </a>
-                <?php endif; ?>
-                <?php if (!empty($footer_twitter)) : ?>
-                    <a href="<?php echo esc_url($footer_twitter); ?>" class="me-2 icon-circle" target="_blank" rel="noopener">
-                        <i class="n-icon" data-icon="s-twitter" data-iconwidth="22px" data-iconheight="22px"></i>
                     </a>
                 <?php endif; ?>
                 <?php if (!empty($footer_linkedin)) : ?>

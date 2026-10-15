@@ -370,7 +370,7 @@ function microlink_solutions_customize_register($wp_customize) {
 
     // Social Links
     $wp_customize->add_setting('footer_facebook', array(
-        'default'           => '#',
+        'default'           => 'https://www.facebook.com/microlinksolutions',
         'sanitize_callback' => 'esc_url_raw',
     ));
     $wp_customize->add_control('footer_facebook', array(
@@ -379,18 +379,8 @@ function microlink_solutions_customize_register($wp_customize) {
         'type'    => 'url',
     ));
 
-    $wp_customize->add_setting('footer_twitter', array(
-        'default'           => '#',
-        'sanitize_callback' => 'esc_url_raw',
-    ));
-    $wp_customize->add_control('footer_twitter', array(
-        'label'   => __('Twitter URL', _THEME_DOMAIN),
-        'section' => 'footer_settings_section',
-        'type'    => 'url',
-    ));
-
     $wp_customize->add_setting('footer_linkedin', array(
-        'default'           => '#',
+        'default'           => 'https://www.linkedin.com/company/microlinksolutionpvtltd',
         'sanitize_callback' => 'esc_url_raw',
     ));
     $wp_customize->add_control('footer_linkedin', array(
